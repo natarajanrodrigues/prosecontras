@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Pros-Contras</title>
+
+    <!-- Bootstrap -->
+    <link th:href="@{css/bootstrap-theme.min.css}" rel="stylesheet"/>
+    <link th:href="@{css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{css/fileinput.css}" rel="stylesheet"/>
+
+</head>
+
+
+<body>
+<!--Modal Login-->
+<div class="modal fade" id="modal-login">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title modal-title-center form-singin-heading">Login</h3>
+            </div>
+            <div class="modal-body" id="corpoModalLogin">
+                <form id="formulario" class="form-signin" method="post">
+                    <div class="form-group">
+                        <label for="email" class="control-label">Email</label>
+                        <input type="text" id="email" name="email" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="control-label">Senha</label>
+                        <input type="password" id="password" name="password" class="form-control" />
+                    </div>
+                    <div id="alertaErroLogin" class="alert alert-danger alert-dismissible hidden" role="alert" >
+                        <strong>Falha no login!</strong> Informações de email e senha incorretas.
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <a href="" class="btn btn-default" data-dismiss="modal">Cancelar</a>
+
+                <a id="btnEntrar" type="submit" class="btn btn-primary">Entrar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<header>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-inverse">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#example">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="/" class="navbar-brand">Pros e contras</a>
+            </div>
+            <div class="collpase navbar-collapse" id="example">
+
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li class="active">
+                        <a th:if="${session.user != null}" href="novoTopico">Novo Tópico</a>
+                    </li>
+                    
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img style="min-height: 25px"></img>
+                            <i class="fa fa-user-plus"></i> <span class="label label-primary"></span>
+                        </a>
+                    </li>
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <img src="img/balance.jpg" class="profile-image img-circle" style="width: 25px; height:25px; object-fit: cover" />
+                            <span th:text="${session.user.name}"></span> 
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <!--<li><a href="editarPerfil"><i class="fa fa-user fa-fw"></i> Editar Perfil</a></li>-->
+
+                            <!--<li class="divider"></li>-->
+                            <li><a href="logout"><i class="fa fa-sign-out fa-fw"></i> Sair</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+            </div>
+
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="jumbotron" style="background-image: url('img/balance.jpg'); color: white; margin-top: 60px">
+            <div class="container">
+                <div class="row text-center">
+                    <h1>Realizando um Novo Tópico</h1>
+                    <h3>Para realizar um novo tópico, basta preencher alguns poucos campos abaixo e confirmar a realização.</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" style="width:70%">
+        <div class="row">
+
+            <dizv class="col-md-8 col-md-push-2 well">
+                
+                <form th:action="@{/novoTopico}" th:object="${topicValidator}" id="form_cada_user" method="post" enctype="multipart/form-data">
+                    <div class="form-group has-feedback">
+                        <label for="name" class="control-label">Título do Tópico</label>
+                        <input type="text" id="name" name="name" class="form-control" th:field="*{name}"  placeholder="Informe o título do tópico" />
+
+                        <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="help-block"></p>
+
+                    </div>
+                    <div class="container row" style="width: 80%">
+                        
+                        <div class="form-group">
+                            <label class="control-label">Selecione uma foto para o Tópico</label>
+                            <input name="photo" type="file" class="file" />
+                        </div>
+                        
+                        <div class="form-group has-feedback">
+                            <label for="description" class="control-label">Descrição do Tópico</label>
+                            <textarea type="text" id="description" class="form-control" name="description"
+                                   placeholder="Comente algo a respeito do tópico" title="Por favor, preencha este campo!" th:field="*{description}">
+                            </textarea>
+                            <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="help-block"></p>
+                        </div>
+                        
+                        <div id="alertaErroLogin" class="alert alert-danger alert-dismissible hidden" role="alert" />
+
+
+                    </div>
+
+                    <button id="btnEnviar" type="submit" class="btn btn-primary">Enviar</button>
+                </form>
+
+            </dizv>
+        </div>
+    </div>
+</header>
+
+<div id="livros" class="container"  style="min-height: 180px">
+
+</div>
+
+<!--FOOTER-->
+
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="js/jquery-3.1.0.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/fileinput.min.js"></script>
+<!--<script src="dist/js/funcoesBusca.js"></script>-->
+
+</body>
+
+</html>
