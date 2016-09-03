@@ -12,6 +12,7 @@ public interface UserTopicRepository {
 
     void newRelationship(UserProfile user, Topic topic, Status status);
     Set<Long> getSuggestedTopicsByForTopics(Set<Topic> topics);
-    Float getPercentual(Set<Topic> forTopics, Set<Topic> againstTopics);
+    Integer getForQtde(Topic topic);
+    Integer getAgainstQtde(Topic topic);
 
 }
