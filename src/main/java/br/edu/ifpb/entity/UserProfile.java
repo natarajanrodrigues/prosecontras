@@ -1,21 +1,20 @@
 package br.edu.ifpb.entity;
 
+import org.bson.Document;
+
 import javax.persistence.*;
 
 /**
  * Created by susanneferraz on 31/08/16.
  */
 @Entity
-public class UserProfile {
+public class UserProfile implements MongoDbObject<UserProfile> {
     @Id
     @GeneratedValue (strategy = GenerationType.AUTO)
     private Long id;
     private String email;
     private String name;
     private String password;
-
-    public UserProfile() {
-    }
 
     public Long getId() {
         return id;
@@ -70,5 +69,29 @@ public class UserProfile {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public Document toDocument() {
+
+        Document doc = new Document();
+
+        doc.append("id", id);
+        doc.append("name", name);
+        doc.append("email", email);
+        doc.append("password", password);
+
+        return doc;
+    }
+
+    @Override
+    public UserProfile fromDocument(Document document) {
+
+        this.id = document.getLong("id");
+        this.name = document.getString("name");
+        this.email = document.getString("email");
+        this.password = document.getString("password");
+
+        return this;
     }
 }
