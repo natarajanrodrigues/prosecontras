@@ -19,13 +19,11 @@ import java.io.*;
  * Created by susanneferraz on 03/09/16.
  */
 public class ImageTopicRepository {
-    private static final MongoClient mongo = new MongoClient("localhost", 27017);
-    private static final MongoDatabase dataBase = mongo.getDatabase("topicimages");
+    private static final MongoDatabase dataBase = MongoDbConnection.getMongoClient().getDatabase("topicimages");
 
     public static String saveTopicImage(MultipartFile file, Long topicId) throws IOException {
         GridFSBucket gridFSBucket = GridFSBuckets.create(dataBase);
         GridFSUploadOptions options = new GridFSUploadOptions()
-//        .chunkSizeBytes(1024)
         .metadata(new Document("topicid", topicId))
         .metadata(new Document("content-type", file.getContentType()));
         ObjectId fileId = gridFSBucket.uploadFromStream("topicImage" + topicId + file.getOriginalFilename(), file.getInputStream(), options);
