@@ -9,23 +9,10 @@ import br.edu.ifpb.entity.Topic;
 import br.edu.ifpb.entity.UserProfile;
 import br.edu.ifpb.repository.ImageTopicRepository;
 import br.edu.ifpb.repository.TopicRepository;
-import br.edu.ifpb.utils.PhotoUtils;
+import br.edu.ifpb.services.TopicoService;
 import br.edu.ifpb.validator.TopicValidator;
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.time.LocalDateTime;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-
-import com.mongodb.client.gridfs.GridFSDownloadStream;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,6 +20,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+import java.io.ByteArrayInputStream;
 
 /**
  *
@@ -45,16 +37,15 @@ public class TopicController {
     private HttpSession httpSession;
     
     @Autowired
-    private TopicRepository topicRepository;
-
-    @Autowired
     private HttpServletRequest request;
 
+    @Autowired
+    private TopicoService topicoService;
 
     @RequestMapping(value = "/topic", method=RequestMethod.GET)
     public ModelAndView viewTopico(@RequestParam ("id") String idTopico){
 
-        Topic topic = topicRepository.findById(Integer.parseInt(idTopico));
+        Topic topic = topicoService.findById(idTopico);
 
         ModelAndView mav = new ModelAndView("topico");
 
@@ -83,27 +74,38 @@ public class TopicController {
         if (result.hasErrors()) {
             return new ModelAndView("novoTopico");
         } else {
-            
-            Topic topic = new Topic();
-            topic.setName(name);
-            topic.setDescription(description);
-            topic.setPostedDateTime(LocalDateTime.now());
-            topic.setActor(userProfile);
-            
-            topic = topicRepository.save(topic);
-            
-            try {
-//                String photoPath = PhotoUtils.salvarFoto("src/main/resources/static/img/topic/", topic.getId().toString()+file.getOriginalFilename(), file.getInputStream());
-//                topic.setPhotoPath(photoPath);
 
-                String objid = ImageTopicRepository.saveTopicImage(file, topic.getId());
-                topic.setPhotoPath(objid);
+//            Topic topic = new Topic();
+//            topic.setName(name);
+//            topic.setDescription(description);
+//            topic.setPostedDateTime(LocalDateTime.now());
+//            topic.setActor(userProfile);
+//
+//            topic = topicRepository.save(topic);
+//
+//            try {
+////                String photoPath = PhotoUtils.salvarFoto("src/main/resources/static/img/topic/", topic.getId().toString()+file.getOriginalFilename(), file.getInputStream());
+////                topic.setPhotoPath(photoPath);
+//
+//                String objid = ImageTopicRepository.saveTopicImage(file, topic.getId());
+//                topic.setPhotoPath(objid);
+//
+//                topicRepository.save(topic);
+//                modelAndView.getModel().put("succes", true);
+//            }
+//            catch (IOException ex) {
+//
+//            }
 
-                topicRepository.save(topic);
+            Topic topic = topicoService.saveTopic(
+                    topicValidator.getName(),
+                    topicValidator.getDescription(),
+                    userProfile,
+                    file);
+            if (topic != null) {
+
                 modelAndView.getModel().put("succes", true);
-            }
-            catch (IOException ex) {
-                
+
             }
             
         }
@@ -119,7 +121,7 @@ public class TopicController {
 
         mav.addObject("parametro", parametroBusca);
 
-        mav.addObject("topics", topicRepository.findByNameLikeIgnoreCase("%" + parametroBusca + "%"));
+        mav.addObject("topics", topicoService.findByNameLikeIgnoreCase(parametroBusca));
 
         return mav;
 
