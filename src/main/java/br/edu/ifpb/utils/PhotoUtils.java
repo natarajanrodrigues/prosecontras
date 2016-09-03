@@ -19,8 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
  * @author kieckegard
  */
 public class PhotoUtils {
-    
-    public static String salvarFoto(String nomePasta, String nomeFoto, InputStream foto) { 
+
+    public static String salvarFoto(String nomePasta, String nomeFoto, InputStream foto) {
         BufferedImage bf = null;
         String path = nomePasta;
         
@@ -34,8 +34,9 @@ public class PhotoUtils {
             file = new File(path + nomeFoto);
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(getByteImage(bf));
-            
-            return path.substring(path.indexOf("img/")) + nomeFoto;
+
+//            return path.substring(path.indexOf("img/")) + nomeFoto;
+            return path + nomeFoto;
         } catch (IOException ex) {
             throw new CouldNotCreateFileException("O arquivo " + (path+nomeFoto) + " não pôde ser criado.");
         }

@@ -9,6 +9,7 @@ import br.edu.ifpb.entity.Topic;
 import br.edu.ifpb.entity.UserProfile;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 /**
  *
@@ -17,7 +18,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface TopicRepository extends JpaRepository<Topic, Integer>{
 
     Topic save(Topic topic);
-    
+
+    Topic findById(Integer id);
+
+    List<Topic> findByNameLikeIgnoreCase(String name);
+
     List<Topic> findByName(String name);
     
     List<Topic> findByActor(UserProfile actor);

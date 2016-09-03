@@ -41,7 +41,9 @@ public class CadastroController {
         model.addAttribute("password", userValidator.getPassword());
 
         if (result.hasErrors()) {
+
             return "cadastro";
+
         } else {
 
             UserProfile user = new UserProfile();

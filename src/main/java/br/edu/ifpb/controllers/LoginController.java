@@ -1,6 +1,7 @@
 package br.edu.ifpb.controllers;
 
 import br.edu.ifpb.entity.UserProfile;
+import br.edu.ifpb.repository.TopicRepository;
 import br.edu.ifpb.repository.UserRepository;
 import br.edu.ifpb.utils.JsonView;
 import br.edu.ifpb.validator.UserValidator;

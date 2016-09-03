@@ -54,7 +54,7 @@ public class Topic implements MongoDbObject<Topic> {
     public LocalDateTime getPostedDateTime() {
         return this.postedDateTime;
     }
-    
+
     public void setPostedDateTime(LocalDateTime postedDateTime) {
         this.postedDateTime = postedDateTime;
     }
@@ -101,7 +101,7 @@ public class Topic implements MongoDbObject<Topic> {
         if (id != null ? !id.equals(topic.id) : topic.id != null) return false;
         if (name != null ? !name.equals(topic.name) : topic.name != null) return false;
         if (photoPath != null ? !photoPath.equals(topic.photoPath) : topic.photoPath != null) return false;
-        if (postedDateTime != null ? !postedDateTime.equals(topic.postedDateTime) : topic.postedDateTime != null) return false;
+//        if (postedDateTime != null ? !postedDateTime.equals(topic.postedDateTime) : topic.postedDateTime != null) return false;
         return description != null ? description.equals(topic.description) : topic.description == null;
 
     }
@@ -112,7 +112,7 @@ public class Topic implements MongoDbObject<Topic> {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (photoPath != null ? photoPath.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (postedDateTime != null ? postedDateTime.hashCode() : 0);
+//        result = 31 * result + (postedDateTime != null ? postedDateTime.hashCode() : 0);
         return result;
     }
 

@@ -7,22 +7,24 @@ package br.edu.ifpb.controllers;
 
 import br.edu.ifpb.entity.Topic;
 import br.edu.ifpb.entity.UserProfile;
+import br.edu.ifpb.repository.ImageTopicRepository;
 import br.edu.ifpb.repository.TopicRepository;
-import br.edu.ifpb.utils.PhotoUtils;
+import br.edu.ifpb.services.TopicoService;
 import br.edu.ifpb.validator.TopicValidator;
-import java.io.IOException;
-import java.time.LocalDateTime;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+import java.io.ByteArrayInputStream;
 
 /**
  *
@@ -35,8 +37,23 @@ public class TopicController {
     private HttpSession httpSession;
     
     @Autowired
-    private TopicRepository topicRepository;
-    
+    private HttpServletRequest request;
+
+    @Autowired
+    private TopicoService topicoService;
+
+    @RequestMapping(value = "/topic", method=RequestMethod.GET)
+    public ModelAndView viewTopico(@RequestParam ("id") String idTopico){
+
+        Topic topic = topicoService.findById(idTopico);
+
+        ModelAndView mav = new ModelAndView("topico");
+
+        mav.addObject("topic", topic);
+
+        return mav;
+    }
+
     @RequestMapping(value = "/novoTopico", method=RequestMethod.GET)
     public String novoTopico(TopicValidator topicValidator) {
         return "novoTopico";
@@ -57,27 +74,71 @@ public class TopicController {
         if (result.hasErrors()) {
             return new ModelAndView("novoTopico");
         } else {
-            
-            Topic topic = new Topic();
-            topic.setName(name);
-            topic.setDescription(description);
-            topic.setPostedDateTime(LocalDateTime.now());
-            topic.setActor(userProfile);
-            
-            topic = topicRepository.save(topic);
-            
-            try {
-                PhotoUtils.salvarFoto("img/topic/", topic.getId().toString()+".jpg", file.getInputStream());
-                topic.setPhotoPath("img/topic/"+topic.getId()+".jpg");
-                topicRepository.save(topic);
+
+//            Topic topic = new Topic();
+//            topic.setName(name);
+//            topic.setDescription(description);
+//            topic.setPostedDateTime(LocalDateTime.now());
+//            topic.setActor(userProfile);
+//
+//            topic = topicRepository.save(topic);
+//
+//            try {
+////                String photoPath = PhotoUtils.salvarFoto("src/main/resources/static/img/topic/", topic.getId().toString()+file.getOriginalFilename(), file.getInputStream());
+////                topic.setPhotoPath(photoPath);
+//
+//                String objid = ImageTopicRepository.saveTopicImage(file, topic.getId());
+//                topic.setPhotoPath(objid);
+//
+//                topicRepository.save(topic);
+//                modelAndView.getModel().put("succes", true);
+//            }
+//            catch (IOException ex) {
+//
+//            }
+
+            Topic topic = topicoService.saveTopic(
+                    topicValidator.getName(),
+                    topicValidator.getDescription(),
+                    userProfile,
+                    file);
+            if (topic != null) {
+
                 modelAndView.getModel().put("succes", true);
-            }
-            catch (IOException ex) {
-                
+
             }
             
         }
         
         return modelAndView;
     }
+
+
+    @RequestMapping(value = "/topicsearch", method = RequestMethod.POST)
+    public ModelAndView buscar(@RequestParam("parametro") String parametroBusca) {
+
+        ModelAndView mav = new ModelAndView("topicsearch");
+
+        mav.addObject("parametro", parametroBusca);
+
+        mav.addObject("topics", topicoService.findByNameLikeIgnoreCase(parametroBusca));
+
+        return mav;
+
+    }
+
+
+    @RequestMapping(value = "/image/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<InputStreamResource> getImage(@PathVariable String id) {
+
+        byte[] file = ImageTopicRepository.getTopicImage2(id);
+
+        return ResponseEntity.ok()
+                .contentLength(file.length)
+//                .contentType(MediaType.parseMediaType(file.getGridFSFile().getMetadata().getString("content-type")))
+                .body(new InputStreamResource(new ByteArrayInputStream(file)));
+    }
+
+
 }
