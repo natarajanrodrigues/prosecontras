@@ -7,17 +7,26 @@ package br.edu.ifpb.controllers;
 
 import br.edu.ifpb.entity.Topic;
 import br.edu.ifpb.entity.UserProfile;
+import br.edu.ifpb.repository.ImageTopicRepository;
 import br.edu.ifpb.repository.TopicRepository;
 import br.edu.ifpb.utils.PhotoUtils;
 import br.edu.ifpb.validator.TopicValidator;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import com.mongodb.client.gridfs.GridFSDownloadStream;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -84,8 +93,11 @@ public class TopicController {
             topic = topicRepository.save(topic);
             
             try {
-                String photoPath = PhotoUtils.salvarFoto("src/main/resources/static/img/topic/", topic.getId().toString()+file.getOriginalFilename(), file.getInputStream());
-                topic.setPhotoPath(photoPath);
+//                String photoPath = PhotoUtils.salvarFoto("src/main/resources/static/img/topic/", topic.getId().toString()+file.getOriginalFilename(), file.getInputStream());
+//                topic.setPhotoPath(photoPath);
+
+                String objid = ImageTopicRepository.saveTopicImage(file, topic.getId());
+                topic.setPhotoPath(objid);
 
                 topicRepository.save(topic);
                 modelAndView.getModel().put("succes", true);
@@ -112,5 +124,19 @@ public class TopicController {
         return mav;
 
     }
+
+
+    @RequestMapping(value = "/image/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<InputStreamResource> getImage(@PathVariable String id) {
+
+        byte[] file = ImageTopicRepository.getTopicImage2(id);
+
+        return ResponseEntity.ok()
+                .contentLength(file.length)
+//                .contentType(MediaType.parseMediaType(file.getGridFSFile().getMetadata().getString("content-type")))
+                .body(new InputStreamResource(new ByteArrayInputStream(file)));
+    }
+
 
 }

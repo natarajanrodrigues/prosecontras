@@ -84,18 +84,7 @@
 
     </div>
 
-    <div>
-
-        <div data-th-each="topic : ${topics}" class="col-sm-6 col-md-3">
-            <div class="thumbnail">
-                <a th:href="@{topic(id=${topic.id})}" ><img src="${topic.photoPath}" style="width:200px; height: 290px;" class='avatar img-thumbnail'/></a>
-                <div class="caption text-center">
-                    <h4 class="limit" th:text="${topic.name}"></h4>
-
-                    <!--<input class="avLivro" type="text" class="rating rating-loading" value="${livro.rating}" data-size="xs" title="">-->
-                </div>
-            </div>
-        </div>
+    <div th:include="home :: topics">
 
     </div>
 

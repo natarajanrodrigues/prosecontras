@@ -21,7 +21,6 @@ public interface TopicRepository extends JpaRepository<Topic, Integer>{
 
     Topic findById(Integer id);
 
-//    @Query("SELECT * FROM Topic t WHERE t.name like %:name%")
     List<Topic> findByNameLikeIgnoreCase(String name);
 
     List<Topic> findByName(String name);

@@ -117,11 +117,12 @@
 
     </div>
 
-    <div>
+    <div th:fragment="topics">
 
         <div data-th-each="topic : ${topics}" class="col-sm-6 col-md-3">
             <div class="thumbnail">
-                <a th:href="@{topic(id=${topic.id})}" ><img th:src="@{${topic.photoPath}}" style="width:290px; height: 290px; object-fit: cover" class='avatar img-thumbnail'/></a>
+                <!--<a th:href="@{topic(id=${topic.id})}" ><img th:src="@{${topic.photoPath}}" style="width:290px; height: 290px; object-fit: cover" class='avatar img-thumbnail'/></a>-->
+                <a th:href="@{topic(id=${topic.id})}" ><img th:src="@{'/image/' + ${topic.photoPath}}" style="width:290px; height: 290px; object-fit: cover" class='avatar img-thumbnail'/></a>
                 <div class="caption text-center">
                     <h4 class="limit" th:text="${topic.name}"></h4>
 

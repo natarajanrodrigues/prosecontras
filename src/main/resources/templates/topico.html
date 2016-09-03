@@ -74,7 +74,7 @@
 
         <div class="panel-body">
             <div class="col-md-4 text-center">
-                <img id="topic_img" th:src="@{${topic.photoPath}}" style='width: 200px; height:200px; object-fit: cover' class='avatar img-thumbnail'/>
+                <img id="topic_img" th:src="@{'/image/' + ${topic.photoPath}}" style='width: 200px; height:200px; object-fit: cover' class='avatar img-thumbnail'/>
                 <!--<input id="avaliacaoTotal" name="avaliacaoTotal" type="text" class="rating" value="${livro.rating}" data-size="xs"/>-->
 
             </div>
@@ -123,21 +123,33 @@
                 <h4 class="text-center">Posicionamentos</h4>
                 <table class="table table-striped">
                     <!--<c:forEach var="av" items="${avaliacoesLivro}">-->
-                    <tr>
-                        <td>
-                        <div class="media">
-                            <div class="media-body media-right media-middle">
-                                <p class="text-right">"TALTALTA"</p>
-                                <!--<input class="avUsuarios" dir="rtl" type="text" class="rating rating-loading" value="${av.rating}" data-size="xs" title=""/>-->
-                            </div>
-                            <div class="media-right media-middle">
-                                <!--<img src="${av.usuario.foto}" class="media-object" style="width: 30px; height:30px; object-fit: cover">-->
-                            </div>
+                    <!--<tr>-->
+                        <!--<td>-->
+                        <!--<div class="media">-->
+                            <!--<div class="media-body media-right media-middle">-->
+                                <!--<p class="text-right">"TALTALTA"</p>-->
+                                <!--&lt;!&ndash;<input class="avUsuarios" dir="rtl" type="text" class="rating rating-loading" value="${av.rating}" data-size="xs" title=""/>&ndash;&gt;-->
+                            <!--</div>-->
+                            <!--<div class="media-right media-middle">-->
+                                <!--&lt;!&ndash;<img src="${av.usuario.foto}" class="media-object" style="width: 30px; height:30px; object-fit: cover">&ndash;&gt;-->
+                            <!--</div>-->
 
-                        </div>
-                        </td>
-                    </tr>
+                        <!--</div>-->
+                        <!--</td>-->
+                    <!--</tr>-->
                     <!--</c:forEach>-->
+                    <div class="container-fluid">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+                                60%
+                            </div>
+                            <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%;">
+                                40%
+                            </div>
+                        </div>
+                    </div>
+
+
                 </table>
             </div>
 
