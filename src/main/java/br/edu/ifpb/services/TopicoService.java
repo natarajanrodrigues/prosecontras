@@ -2,8 +2,10 @@ package br.edu.ifpb.services;
 
 import br.edu.ifpb.entity.Topic;
 import br.edu.ifpb.entity.UserProfile;
+import br.edu.ifpb.enums.Status;
 import br.edu.ifpb.repository.ImageTopicRepository;
 import br.edu.ifpb.repository.TopicRepository;
+import br.edu.ifpb.repository.UserTopicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +24,8 @@ public class TopicoService {
 
 
     private static TopicRepository topicRepository;
+    @Autowired
+    private static UserTopicRepository userTopicRepository;
 
     @Autowired
     public TopicoService(TopicRepository topicRepository) {
@@ -58,6 +62,24 @@ public class TopicoService {
 
     public Topic findById(String id) {
         return topicRepository.findById(Integer.parseInt(id));
+    }
+
+    public void voteTopic(UserProfile user, Topic topic, Status status) {
+        userTopicRepository.newRelationship(user,topic,status);
+    }
+
+    public Float getForPercent(Topic topic) {
+        Integer forQtde = userTopicRepository.getForQtde(topic);
+        Integer userQtde = userTopicRepository.getWhoVotedQtd();
+
+        return ((float) forQtde/userQtde)*100;
+    }
+
+    public Float getAgainstPercent(Topic topic) {
+        Integer againstQtde = userTopicRepository.getAgainstQtde(topic);
+        Integer userQtde = userTopicRepository.getWhoVotedQtd();
+
+        return ((float) againstQtde/userQtde)*100;
     }
 
 }
