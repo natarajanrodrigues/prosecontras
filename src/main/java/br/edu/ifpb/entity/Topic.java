@@ -1,18 +1,15 @@
 package br.edu.ifpb.entity;
 
+import org.bson.Document;
+
 import java.time.LocalDateTime;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 /**
  * Created by susanneferraz on 31/08/16.
  */
 @Entity
-public class Topic {
-
+public class Topic implements MongoDbObject<Topic> {
     @Id
     @GeneratedValue (strategy = GenerationType.AUTO)
     private Long id;
@@ -20,6 +17,10 @@ public class Topic {
     private String photoPath;
     private String description;
     private LocalDateTime postedDateTime;
+    @Transient
+    private Float forPercentual;
+    @Transient
+    private Float againstPercentual;
     @ManyToOne
     private UserProfile actor;
 
@@ -74,6 +75,22 @@ public class Topic {
         this.actor = actor;
     }
 
+    public Float getForPercentual() {
+        return this.forPercentual;
+    }
+
+    public void setForPercentual(Float forPercentual) {
+        this.forPercentual = forPercentual;
+    }
+
+    public Float getAgainstPercentual() {
+        return this.againstPercentual;
+    }
+
+    public void setAgainstPercentual(Float againstPercentual) {
+        this.againstPercentual = againstPercentual;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -97,5 +114,31 @@ public class Topic {
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (postedDateTime != null ? postedDateTime.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public Document toDocument() {
+
+        Document doc = new Document();
+
+        doc.append("id", this.id);
+        doc.append("user", this.actor.toDocument());
+        doc.append("postedDateTime", this.postedDateTime.toString());
+        doc.append("photoPath", this.photoPath);
+        doc.append("description", this.description);
+
+        return doc;
+    }
+
+    @Override
+    public Topic fromDocument(Document document) {
+
+        this.id = document.getLong("id");
+        this.actor = new UserProfile().fromDocument(document.get("user", Document.class));
+        this.postedDateTime = LocalDateTime.parse(document.getString("postedDateTime"));
+        this.photoPath = document.getString("photoPath");
+        this.description = document.getString("description");
+
+        return this;
     }
 }
