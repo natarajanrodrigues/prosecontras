@@ -14,5 +14,6 @@ public interface UserTopicRepository {
     Set<Long> getSuggestedTopicsByForTopics(Set<Topic> topics);
     Integer getForQtde(Topic topic);
     Integer getAgainstQtde(Topic topic);
+    Integer getWhoVotedQtd();
 
 }
