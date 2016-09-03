@@ -5,6 +5,7 @@
  */
 package br.edu.ifpb.controllers;
 
+import br.edu.ifpb.repository.TopicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,10 @@ public class SimpleGetPagesController {
 
     @Autowired
     private HttpSession httpSession;
+
+    @Autowired
+    TopicRepository topicRepository;
+
 
     @GetMapping("/")
     public ModelAndView index() {
@@ -39,7 +44,11 @@ public class SimpleGetPagesController {
     @GetMapping("/home")
     public ModelAndView home() {
 
-        return new ModelAndView("home");
+        ModelAndView mav = new ModelAndView("home");
+
+        mav.addObject("topics", topicRepository.findAll());
+
+        return mav;
 
     }
 

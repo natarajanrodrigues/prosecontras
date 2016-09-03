@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Pros-Contras</title>
+
+    <!-- Bootstrap -->
+    <link th:href="@{css/bootstrap-theme.min.css}" rel="stylesheet"/>
+    <link th:href="@{css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{css/fileinput.css}" rel="stylesheet"/>
+
+</head>
+
+
+<body>
+
+<header style="padding-bottom: 70px;">
+    <nav class="navbar navbar-default navbar-fixed-top navbar-inverse">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#example">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="/" class="navbar-brand">Pros e contras</a>
+            </div>
+            <div class="collpase navbar-collapse" id="example">
+
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li class="active">
+                        <a th:if="${session.user != null}" href="novoTopico">Novo Tópico</a>
+                    </li>
+                    
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img style="min-height: 25px"></img>
+                            <i class="fa fa-user-plus"></i> <span class="label label-primary"></span>
+                        </a>
+                    </li>
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <img src="img/balance.jpg" class="profile-image img-circle" style="width: 25px; height:25px; object-fit: cover" />
+                            <span th:text="${session.user.name}"></span>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <!--<li><a href="editarPerfil"><i class="fa fa-user fa-fw"></i> Editar Perfil</a></li>-->
+
+                            <!--<li class="divider"></li>-->
+                            <li><a href="logout"><i class="fa fa-sign-out fa-fw"></i> Sair</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+            </div>
+
+        </div>
+    </nav>
+
+</header>
+
+
+<div id="topics" class="container col-md-6 col-md-offset-3"  style="min-height: 180px">
+
+    <div class="panel panel-primary">
+        <div class="panel-heading text-center">
+            <h3 th:text="@{${topic.name}}"></h3>
+        </div>
+
+        <div class="panel-body">
+            <div class="col-md-4 text-center">
+                <img id="topic_img" th:src="@{${topic.photoPath}}" style='width: 200px; height:200px; object-fit: cover' class='avatar img-thumbnail'/>
+                <!--<input id="avaliacaoTotal" name="avaliacaoTotal" type="text" class="rating" value="${livro.rating}" data-size="xs"/>-->
+
+            </div>
+
+            <div class="col-md-8">
+                <dl>
+                <!--<dl class="dl-horizontal">-->
+                    <dt>Nome do Tópico:</dt>
+                    <dd th:text="@{${topic.name}}"></dd>
+                </dl>
+
+                <dl>
+                    <dt>Inserção em: </dt>
+                    <dd th:text="${#temporals.format(topic.postedDateTime, 'dd/MM/yyyy HH:mm')}"></dd>
+                </dl>
+
+
+                <dl class="dl">
+                    <dt>Descrição:</dt>
+                    <dd th:text="@{${topic.description}}"></dd>
+                </dl>
+
+                <!---->
+
+                <!--<c:if test="${usuario ne null && avaliacao ne null}">-->
+                    <!--<dl class="dl-horizontal">-->
+                        <!--<dt>Sua avaliação:</dt>-->
+                        <!--<div>-->
+                            <!--<dd>-->
+                                <!--${avaliacao.comentario}-->
+                            <!--</dd>-->
+                            <!--<dd><input id="minhaAvaliacao" name="minhaAvaliacao" type="text" class="rating" value="${avaliacao.rating}" data-size="xs"></dd>-->
+                        <!--</div>-->
+
+                    <!--</dl>-->
+                <!--</c:if>-->
+
+                <div>
+
+                </div>
+            </div>
+        </div>
+
+            <div class="panel-footer">
+
+                <h4 class="text-center">Posicionamentos</h4>
+                <table class="table table-striped">
+                    <!--<c:forEach var="av" items="${avaliacoesLivro}">-->
+                    <tr>
+                        <td>
+                        <div class="media">
+                            <div class="media-body media-right media-middle">
+                                <p class="text-right">"TALTALTA"</p>
+                                <!--<input class="avUsuarios" dir="rtl" type="text" class="rating rating-loading" value="${av.rating}" data-size="xs" title=""/>-->
+                            </div>
+                            <div class="media-right media-middle">
+                                <!--<img src="${av.usuario.foto}" class="media-object" style="width: 30px; height:30px; object-fit: cover">-->
+                            </div>
+
+                        </div>
+                        </td>
+                    </tr>
+                    <!--</c:forEach>-->
+                </table>
+            </div>
+
+
+    </div>
+
+</div>
+
+<!--FOOTER-->
+
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="js/jquery-3.1.0.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/fileinput.min.js"></script>
+<!--<script src="dist/js/funcoesBusca.js"></script>-->
+
+</body>
+
+</html>

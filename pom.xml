@@ -76,6 +76,7 @@
 		<dependency>
 			<groupId>org.mongodb</groupId>
 			<artifactId>mongo-java-driver</artifactId>
+			<version>LATEST</version>
 		</dependency>
 
 		<!-- Spring data mongodb -->
@@ -83,7 +84,13 @@
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-mongodb</artifactId>
 		</dependency>
-                
+
+		<dependency>
+			<groupId>org.thymeleaf.extras</groupId>
+			<artifactId>thymeleaf-extras-java8time</artifactId>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>

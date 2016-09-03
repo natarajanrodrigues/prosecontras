@@ -10,17 +10,18 @@ import br.edu.ifpb.entity.UserProfile;
 import br.edu.ifpb.repository.TopicRepository;
 import br.edu.ifpb.utils.PhotoUtils;
 import br.edu.ifpb.validator.TopicValidator;
+
 import java.io.IOException;
 import java.time.LocalDateTime;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -36,7 +37,23 @@ public class TopicController {
     
     @Autowired
     private TopicRepository topicRepository;
-    
+
+    @Autowired
+    private HttpServletRequest request;
+
+
+    @RequestMapping(value = "/topic", method=RequestMethod.GET)
+    public ModelAndView viewTopico(@RequestParam ("id") String idTopico){
+
+        Topic topic = topicRepository.findById(Integer.parseInt(idTopico));
+
+        ModelAndView mav = new ModelAndView("topico");
+
+        mav.addObject("topic", topic);
+
+        return mav;
+    }
+
     @RequestMapping(value = "/novoTopico", method=RequestMethod.GET)
     public String novoTopico(TopicValidator topicValidator) {
         return "novoTopico";
@@ -67,8 +84,9 @@ public class TopicController {
             topic = topicRepository.save(topic);
             
             try {
-                PhotoUtils.salvarFoto("img/topic/", topic.getId().toString()+".jpg", file.getInputStream());
-                topic.setPhotoPath("img/topic/"+topic.getId()+".jpg");
+                String photoPath = PhotoUtils.salvarFoto("src/main/resources/static/img/topic/", topic.getId().toString()+file.getOriginalFilename(), file.getInputStream());
+                topic.setPhotoPath(photoPath);
+
                 topicRepository.save(topic);
                 modelAndView.getModel().put("succes", true);
             }
@@ -80,4 +98,19 @@ public class TopicController {
         
         return modelAndView;
     }
+
+
+    @RequestMapping(value = "/topicsearch", method = RequestMethod.POST)
+    public ModelAndView buscar(@RequestParam("parametro") String parametroBusca) {
+
+        ModelAndView mav = new ModelAndView("topicsearch");
+
+        mav.addObject("parametro", parametroBusca);
+
+        mav.addObject("topics", topicRepository.findByNameLikeIgnoreCase("%" + parametroBusca + "%"));
+
+        return mav;
+
+    }
+
 }

@@ -15,38 +15,6 @@
 
 
 <body>
-<!--Modal Login-->
-<div class="modal fade" id="modal-login">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h3 class="modal-title modal-title-center form-singin-heading">Login</h3>
-            </div>
-            <div class="modal-body" id="corpoModalLogin">
-                <form id="formulario" class="form-signin" method="post">
-                    <div class="form-group">
-                        <label for="email" class="control-label">Email</label>
-                        <input type="text" id="email" name="email" class="form-control"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="password" class="control-label">Senha</label>
-                        <input type="password" id="password" name="password" class="form-control" />
-                    </div>
-                    <div id="alertaErroLogin" class="alert alert-danger alert-dismissible hidden" role="alert" >
-                        <strong>Falha no login!</strong> Informações de email e senha incorretas.
-                    </div>
-                </form>
-            </div>
-
-            <div class="modal-footer">
-                <a href="" class="btn btn-default" data-dismiss="modal">Cancelar</a>
-
-                <a id="btnEntrar" type="submit" class="btn btn-primary">Entrar</a>
-            </div>
-        </div>
-    </div>
-</div>
 
 <header>
     <nav class="navbar navbar-default navbar-fixed-top navbar-inverse">
@@ -66,7 +34,6 @@
                     <li>
                         <a th:if="${session.user != null}" href="novoTopico">Novo Tópico</a>
                     </li>
-
                     
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img style="min-height: 25px"></img>
@@ -102,12 +69,12 @@
             <div class="row">
                 <div class="form-group col-sm-10">
                     <div class="col-sm-12">
-                        <input id="parametro" name="parametro" type="text" class="form-control" placeholder="Buscar tópicos pelo nome"/>
+                        <input id="parametro" name="parametro" type="text" class="form-control" placeholder="Buscar tópicos pelo nome" th:value="${parametro}"/>
                     </div>
                 </div>
 
                 <div class="form-group col-sm-1">
-                    <button id="buscaLivros" type="submit" class="btn btn-primary">Buscar</button>
+                    <button id="buscaTopicos" type="submit" class="btn btn-primary">Buscar</button>
                 </div>
             </div>
 
@@ -121,7 +88,7 @@
 
         <div data-th-each="topic : ${topics}" class="col-sm-6 col-md-3">
             <div class="thumbnail">
-                <a th:href="@{topic(id=${topic.id})}" ><img th:src="@{${topic.photoPath}}" style="width:290px; height: 290px; object-fit: cover" class='avatar img-thumbnail'/></a>
+                <a th:href="@{topic(id=${topic.id})}" ><img src="${topic.photoPath}" style="width:200px; height: 290px;" class='avatar img-thumbnail'/></a>
                 <div class="caption text-center">
                     <h4 class="limit" th:text="${topic.name}"></h4>
 

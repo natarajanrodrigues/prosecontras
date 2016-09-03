@@ -5,17 +5,20 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
-
-@EntityScan(
-  basePackageClasses = { ProsecontrasApplication.class, Jsr310JpaConverters.class }
-)
+import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 
 @SpringBootApplication
 public class ProsecontrasApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ProsecontrasApplication.class, args);
+	}
+
+	@Bean
+	public Java8TimeDialect java8TimeDialect() {
+		return new Java8TimeDialect();
 	}
 
 	@Override
