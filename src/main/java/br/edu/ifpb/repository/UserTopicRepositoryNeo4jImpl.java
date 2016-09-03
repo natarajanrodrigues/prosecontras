@@ -141,11 +141,25 @@ public class UserTopicRepositoryNeo4jImpl implements UserTopicRepository {
 
     }
 
+    @Override
+    public Integer getWhoVotedQtd() {
+        ResourceIterator<Node> users = service.findNodes(Label.label("user"));
+        Integer count=0;
+        while(users.hasNext()) {
+            count++;
+            users.next();
+        }
+
+        return count;
+    }
+
     private Integer countRelationship(Iterator<Relationship> iterator) {
         Integer forCount = 0;
 
         while(iterator.hasNext()) {
             forCount++;
+
+            iterator.next();
         }
 
         return forCount;
