@@ -18,8 +18,8 @@ import java.util.TreeSet;
 @Repository
 public class UserTopicRepositoryNeo4jImpl implements UserTopicRepository {
 
-//    private String path = "C:/Users/kieckegard/Documents/Neo4j/default.graphdb";
-    private String path = "/Users/susanneferraz/Dropbox/ADS 2016.1/BDNC/neo4jprosecontra";
+    private String path = "C:/Users/kieckegard/Documents/Neo4j/default.graphdb";
+    //private String path = "/Users/susanneferraz/Dropbox/ADS 2016.1/BDNC/neo4jprosecontra";
     private File file;
     private GraphDatabaseService service;
 
@@ -51,9 +51,10 @@ public class UserTopicRepositoryNeo4jImpl implements UserTopicRepository {
     public void deleteSameRelationship(Node userNode, Long topicId) {
         for(Relationship r : userNode.getRelationships(Direction.OUTGOING)) {
             Long targetTopicId = (Long) r.getEndNode().getProperty("id");
-            if(targetTopicId == topicId) {
-                System.out.println("User is already in a relationship with topic " + targetTopicId + " deleting it... ");
+            if(targetTopicId.equals(topicId)) {
                 r.delete();
+            } else {
+                System.out.println(targetTopicId + " != " + topicId);
             }
         }
     }
