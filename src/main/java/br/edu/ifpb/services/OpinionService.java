@@ -2,8 +2,10 @@ package br.edu.ifpb.services;
 
 import br.edu.ifpb.entity.Opinion;
 import br.edu.ifpb.entity.Topic;
+import br.edu.ifpb.entity.UserProfile;
 import br.edu.ifpb.repository.OpinionCacheRepository;
 import br.edu.ifpb.repository.OpinionRepository;
+import br.edu.ifpb.repository.OpinionRepositoryMongoDbImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collections;
@@ -37,6 +39,12 @@ public class OpinionService {
 
     public List<Opinion> getOpinionsByTopicOrderedByDate(Topic topic) {
         List<Opinion> opinions = opinionRepository.listByTopic(topic);
+        Collections.sort(opinions);
+        return opinions;
+    }
+
+    public List<Opinion> getUserOpinionsByTopicOrderedByDate(UserProfile user, Topic topic) {
+        List<Opinion> opinions = opinionRepository.getUserOpinionsByTopic(user,topic);
         Collections.sort(opinions);
         return opinions;
     }
