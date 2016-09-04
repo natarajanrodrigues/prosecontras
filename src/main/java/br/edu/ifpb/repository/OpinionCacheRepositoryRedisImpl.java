@@ -1,11 +1,13 @@
 package br.edu.ifpb.repository;
 
 import br.edu.ifpb.entity.Opinion;
+import org.springframework.stereotype.Repository;
 import redis.clients.jedis.Jedis;
 
 /**
  * Created by kieckegard on 02/09/2016.
  */
+@Repository
 public class OpinionCacheRepositoryRedisImpl implements OpinionCacheRepository {
 
     @Override

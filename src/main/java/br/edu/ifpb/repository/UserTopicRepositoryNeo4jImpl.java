@@ -5,6 +5,7 @@ import br.edu.ifpb.entity.UserProfile;
 import br.edu.ifpb.enums.Status;
 import org.neo4j.graphdb.*;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
+import org.springframework.stereotype.Repository;
 
 import java.io.File;
 import java.util.Iterator;
@@ -14,9 +15,11 @@ import java.util.TreeSet;
 /**
  * Created by kieckegard on 01/09/2016.
  */
+@Repository
 public class UserTopicRepositoryNeo4jImpl implements UserTopicRepository {
 
-    private String path = "C:/Users/kieckegard/Documents/Neo4j/default.graphdb";
+//    private String path = "C:/Users/kieckegard/Documents/Neo4j/default.graphdb";
+    private String path = "/Users/susanneferraz/Dropbox/ADS 2016.1/BDNC/neo4jprosecontra";
     private File file;
     private GraphDatabaseService service;
 
@@ -44,6 +47,7 @@ public class UserTopicRepositoryNeo4jImpl implements UserTopicRepository {
         }
     }
 
+    @Override
     public void deleteSameRelationship(Node userNode, Long topicId) {
         for(Relationship r : userNode.getRelationships(Direction.OUTGOING)) {
             Long targetTopicId = (Long) r.getEndNode().getProperty("id");

@@ -1,8 +1,12 @@
 package br.edu.ifpb.controllers;
 
+import br.edu.ifpb.entity.Opinion;
+import br.edu.ifpb.entity.Positioning;
 import br.edu.ifpb.entity.UserProfile;
+import br.edu.ifpb.repository.OpinionCacheRepository;
 import br.edu.ifpb.repository.TopicRepository;
 import br.edu.ifpb.repository.UserRepository;
+import br.edu.ifpb.services.OpinionService;
 import br.edu.ifpb.utils.JsonView;
 import br.edu.ifpb.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +32,9 @@ public class LoginController {
     UserRepository userRepository;
 
     @Autowired
+    private OpinionService opinionService;
+
+    @Autowired
     private HttpSession httpSession;
 
     @PostMapping(value = "/login")
@@ -47,6 +54,14 @@ public class LoginController {
 
             UserProfile user = users.get(0);
 
+            Opinion lastCacheOpinion = opinionService.getCachedOpinion(user.getEmail());
+
+            if (lastCacheOpinion == null) {
+                lastCacheOpinion = new Opinion();
+                lastCacheOpinion.setUser(user);
+            }
+
+            httpSession.setAttribute("opinion", lastCacheOpinion);
             httpSession.setAttribute("user", user);
 
             return new ModelAndView("redirect:/home");
@@ -56,6 +71,18 @@ public class LoginController {
 
     @GetMapping(value = "/logout")
     public ModelAndView logout(){
+
+        Opinion cachedOpinion = (Opinion) httpSession.getAttribute("opinion");
+
+//        List<Positioning> opinionPositionings = cachedOpinion.getPositionings();
+//
+//        if (opinionPositionings.size() != 0) {
+//            opinionService.saveOpinionOnCache(cachedOpinion);
+//        }
+
+        if (cachedOpinion != null) {
+            opinionService.saveOpinionOnCache(cachedOpinion);
+        }
 
         httpSession.invalidate();
 

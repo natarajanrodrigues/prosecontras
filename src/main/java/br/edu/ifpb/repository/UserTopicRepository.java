@@ -3,6 +3,8 @@ package br.edu.ifpb.repository;
 import br.edu.ifpb.entity.Topic;
 import br.edu.ifpb.entity.UserProfile;
 import br.edu.ifpb.enums.Status;
+import org.neo4j.graphdb.Node;
+
 import java.util.Set;
 
 /**
@@ -15,5 +17,8 @@ public interface UserTopicRepository {
     Integer getForQtde(Topic topic);
     Integer getAgainstQtde(Topic topic);
     Integer getWhoVotedQtd();
+    void deleteSameRelationship(Node userNode, Long topicId);
+
+
 
 }
