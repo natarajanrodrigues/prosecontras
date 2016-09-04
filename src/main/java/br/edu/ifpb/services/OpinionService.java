@@ -1,9 +1,11 @@
 package br.edu.ifpb.services;
 
 import br.edu.ifpb.entity.Opinion;
+import br.edu.ifpb.entity.Positioning;
 import br.edu.ifpb.entity.Topic;
 import br.edu.ifpb.entity.UserProfile;
 import br.edu.ifpb.repository.*;
+import org.neo4j.server.security.auth.User;
 import org.neo4j.unsafe.impl.batchimport.cache.NumberArrayFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,12 +22,14 @@ public class OpinionService {
 
     private static OpinionRepository opinionRepository;
     private static OpinionCacheRepository opinionCacheRepository;
+    private static UserTopicRepository userTopicRepository;
 
 
     @Autowired
-    public OpinionService(OpinionCacheRepository opinionCacheRepository, OpinionRepository opinionRepository) {
+    public OpinionService(OpinionCacheRepository opinionCacheRepository, OpinionRepository opinionRepository, UserTopicRepository userTopicRepository) {
         this.opinionCacheRepository = opinionCacheRepository;
         this.opinionRepository = opinionRepository;
+        this.userTopicRepository = userTopicRepository;
 
     }
 
@@ -53,7 +57,10 @@ public class OpinionService {
         opinion.setDateTime(LocalDateTime.now());
         opinionRepository.save(opinion);
 
-        //make persiste on neo4j
+        for(Positioning p : opinion.getPositionings()) {
+            userTopicRepository.newRelationship(opinion.getUser(), p.getTopic(), p.getStatus());
+        }
+
     }
 
     public List<Opinion> getOpinionsByTopicOrderedByDate(Topic topic) {
