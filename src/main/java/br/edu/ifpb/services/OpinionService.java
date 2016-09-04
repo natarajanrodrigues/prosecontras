@@ -3,23 +3,31 @@ package br.edu.ifpb.services;
 import br.edu.ifpb.entity.Opinion;
 import br.edu.ifpb.entity.Topic;
 import br.edu.ifpb.entity.UserProfile;
-import br.edu.ifpb.repository.OpinionCacheRepository;
-import br.edu.ifpb.repository.OpinionRepository;
-import br.edu.ifpb.repository.OpinionRepositoryMongoDbImpl;
+import br.edu.ifpb.repository.*;
+import org.neo4j.unsafe.impl.batchimport.cache.NumberArrayFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
 /**
  * Created by kieckegard on 02/09/2016.
  */
+@Service
 public class OpinionService {
 
+
+    private static OpinionRepository opinionRepository;
+    private static OpinionCacheRepository opinionCacheRepository;
+
+
     @Autowired
-    private OpinionRepository opinionRepository;
-    @Autowired
-    private OpinionCacheRepository opinionCacheRepository;
+    public OpinionService(OpinionCacheRepository opinionCacheRepository, OpinionRepository opinionRepository) {
+        this.opinionCacheRepository = opinionCacheRepository;
+        this.opinionRepository = opinionRepository;
+
+    }
 
     public void saveOpinionOnCache(Opinion opinion) {
         opinionCacheRepository.save(opinion);
@@ -29,12 +37,23 @@ public class OpinionService {
         opinionCacheRepository.remove(opinion.getUser().getEmail());
     }
 
-    public void getCachedOpinion(String userEmail) {
-        opinionCacheRepository.getCachedOpinion(userEmail);
+    public Opinion getCachedOpinion(String userEmail) {
+
+        String opString = opinionCacheRepository.getCachedOpinion(userEmail);
+
+        if (opString != null) {
+            Opinion o = new Opinion();
+
+            return o.fromJsonString(opString);
+        }
+        return null;
     }
 
     public void publishOpinion(Opinion opinion) {
+        opinion.setDateTime(LocalDateTime.now());
         opinionRepository.save(opinion);
+
+        //make persiste on neo4j
     }
 
     public List<Opinion> getOpinionsByTopicOrderedByDate(Topic topic) {

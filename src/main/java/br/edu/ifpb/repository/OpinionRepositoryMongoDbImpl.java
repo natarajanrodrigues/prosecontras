@@ -9,6 +9,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
+import org.springframework.stereotype.Repository;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
 /**
  * Created by kieckegard on 02/09/2016.
  */
+@Repository
 public class OpinionRepositoryMongoDbImpl implements OpinionRepository {
 
     private final MongoDatabase mongoDatabase;

@@ -8,6 +8,7 @@ import org.bson.Document;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -44,6 +45,31 @@ public class Opinion implements MongoDbObject<Opinion>, Comparable<Opinion>, Jso
         this.positionings.remove(positioning);
     }
 
+    public void remotePositioningByTopic(Long topicId) {
+
+        Iterator<Positioning> iterator = positionings.iterator();
+        boolean achou = false;
+        while (iterator.hasNext() && achou == false) {
+            if (iterator.next().getTopic().getId().equals(topicId)) {
+                achou = true;
+                iterator.remove();
+            }
+        }
+    }
+
+    public Positioning getPositioningByTopic(Long topicId){
+        Positioning pos = null;
+
+        for (Positioning p : positionings){
+            if (p.getTopic().getId().equals(topicId)) {
+                pos = p;
+                break;
+            }
+        }
+
+        return pos;
+    }
+
     public void setUser(UserProfile user) {
         this.user = user;
     }
@@ -51,6 +77,15 @@ public class Opinion implements MongoDbObject<Opinion>, Comparable<Opinion>, Jso
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
     }
+
+    public boolean hasTopic(Topic topic) {
+        for (Positioning p : positionings) {
+            if (p.getTopic().equals(topic))
+                return true;
+        }
+        return false;
+    }
+
 
     @Override
     public Document toDocument() {
