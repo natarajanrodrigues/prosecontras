@@ -146,27 +146,39 @@ public class OpiniaoController {
     }
 
     @RequestMapping(value = "/publish")
-    public ModelAndView publishOpinion(){
+    public String publishOpinion(Model model){
 
         Opinion opiniao = (Opinion) httpSession.getAttribute("opinion");
 
-        boolean ready = true;
-        for (Positioning p: opiniao.getPositionings()) {
-            if (p.getStatus() == null )
-                ready = false;
+//        ModelAndView mav;
+
+        boolean ready = false;
+        if (opiniao.getPositionings().size() != 0) {
+            ready = true;
+            for (Positioning p: opiniao.getPositionings()) {
+                if (p.getStatus() == null )
+                    ready = false;
+            }
         }
 
         if (ready) {
+
             opinionService.publishOpinion(opiniao);
             Opinion newOpinion = new Opinion();
             newOpinion.setUser(((UserProfile) httpSession.getAttribute("user")));
             saveOpinionOnCache(httpSession, newOpinion);
+            return "home";
+
+        } else {
+            if (opiniao.getPositionings().size() > 0)
+                model.addAttribute("error", "Não foi possível publicar sua opinião. Ainda existe posicionamento a ser editado.");
+            return "opiniao";
         }
 
 
-        ModelAndView mav = new ModelAndView("redirect:/home");
 
-        return mav;
+
+
     }
 
 

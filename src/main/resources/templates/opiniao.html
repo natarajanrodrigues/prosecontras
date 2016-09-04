@@ -61,6 +61,9 @@
         </div>
 
         <div class="panel-body">
+            <p th:if="${session.opinion.positionings.size() eq 0}">Você ainda não escolheu novos tópicos para opinar.</p>
+
+            <div th:if="${error ne null}" class="alert alert-danger" role="alert" th:text="${error}"/>
 
             <div class="media" data-th-each="positioning : ${session.opinion.positionings}">
                 <div class="media-left">
@@ -70,6 +73,7 @@
                 </div>
                 <div class="media-body">
                     <h4 class="media-heading" th:text="@{${positioning.topic.name}}"></h4>
+
                     <dl>
                         <dt>Posição:</dt>
                         <!--<dd th:text="@{${positioning.status}}"></dd>-->
