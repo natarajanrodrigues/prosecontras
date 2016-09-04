@@ -2,6 +2,7 @@ package br.edu.ifpb.repository;
 
 import br.edu.ifpb.entity.Opinion;
 import br.edu.ifpb.entity.Topic;
+import br.edu.ifpb.entity.UserProfile;
 import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -35,6 +36,19 @@ public class OpinionRepositoryMongoDbImpl implements OpinionRepository {
     @Override
     public List<Opinion> listByTopic(Topic topic) {
         FindIterable<Document> iterable = this.collection.find(new Document("positionings.topic.id", topic.getId()));
+        List<Opinion> opinions = new LinkedList<>();
+        MongoCursor<Document> cursor = iterable.iterator();
+
+        while(cursor.hasNext()) {
+            opinions.add(new Opinion().fromDocument(cursor.next()));
+        }
+
+        return opinions;
+    }
+
+    @Override
+    public List<Opinion> getUserOpinionsByTopic(UserProfile user, Topic topic) {
+        FindIterable<Document> iterable = this.collection.find(new Document("positionings.topic.id", topic.getId()).append("user.id",user.getId()));
         List<Opinion> opinions = new LinkedList<>();
         MongoCursor<Document> cursor = iterable.iterator();
 
