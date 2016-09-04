@@ -46,8 +46,7 @@ public class UserTopicRepositoryNeo4jImpl implements UserTopicRepository {
         }
     }
 
-    @Override
-    public void deleteSameRelationship(Node userNode, Long topicId) {
+    private void deleteSameRelationship(Node userNode, Long topicId) {
         for(Relationship r : userNode.getRelationships(Direction.OUTGOING)) {
             Long targetTopicId = (Long) r.getEndNode().getProperty("id");
             if(targetTopicId.equals(topicId)) {
