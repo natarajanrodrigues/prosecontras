@@ -14,8 +14,6 @@ public class OpinionCacheRepositoryRedisImpl implements OpinionCacheRepository {
     public void save(Opinion opinion) {
         try (Jedis jedis = JedisConnection.getJedisConnection()) {
             jedis.set(opinion.getUser().getEmail(), opinion.getJsonString());
-
-            jedis.save();
         }
     }
 
