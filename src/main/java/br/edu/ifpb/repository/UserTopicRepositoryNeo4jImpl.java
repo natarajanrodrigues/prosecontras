@@ -19,7 +19,7 @@ import java.util.TreeSet;
 public class UserTopicRepositoryNeo4jImpl implements UserTopicRepository {
 
 //    private String path = "C:/Users/kieckegard/Documents/Neo4j/default.graphdb";
-    private String path = "/Users/susanneferraz/Dropbox/ADS 2016.1/BDNC/neo4jprosecontra";
+    private String path = "/Users/susanneferraz/Dropbox/ADS 2016.1/neo4j";
     private File file;
     private GraphDatabaseService service;
 
@@ -131,17 +131,49 @@ public class UserTopicRepositoryNeo4jImpl implements UserTopicRepository {
     @Override
     public Integer getForQtde(Topic topic) {
 
-        Node topicNode = getTopicNodeById(topic.getId());
-        Iterable<Relationship> iterable = topicNode.getRelationships(Direction.INCOMING, Status.FOR);
-        return countRelationship(iterable.iterator());
+        Integer result;
+
+        try (Transaction tx = service.beginTx()) {
+
+            Node topicNode = getTopicNodeById(topic.getId());
+            Iterable<Relationship> iterable = null;
+            if (topicNode != null) {
+                iterable = topicNode.getRelationships(Direction.INCOMING, Status.FOR);
+                result = countRelationship(iterable.iterator());
+            } else {
+                result = new Integer(0);
+            }
+
+            tx.success();
+
+        }
+
+        return result;
+
     }
 
     @Override
     public Integer getAgainstQtde(Topic topic) {
 
-        Node topicNode = getTopicNodeById(topic.getId());
-        Iterable<Relationship> iterable = topicNode.getRelationships(Direction.INCOMING, Status.AGAINST);
-        return countRelationship(iterable.iterator());
+        Integer result;
+
+        try (Transaction tx = service.beginTx()) {
+
+            Node topicNode = getTopicNodeById(topic.getId());
+            Iterable<Relationship> iterable = null;
+            if (topicNode != null) {
+                iterable = topicNode.getRelationships(Direction.INCOMING, Status.AGAINST);
+                result = countRelationship(iterable.iterator());
+            } else {
+                result = new Integer(0);
+            }
+
+            tx.success();
+
+        }
+
+        return result;
+
 
     }
 

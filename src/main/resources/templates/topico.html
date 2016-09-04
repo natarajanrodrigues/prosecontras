@@ -95,12 +95,10 @@
                     <!--</c:forEach>-->
                     <div class="container-fluid">
                         <div class="progress">
-                            <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                                60%
-                            </div>
-                            <div class="progress-bar progress-bar-danger progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%;">
-                                40%
-                            </div>
+                            <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar"
+                                 th:attr="aria-valuenow=${percentages.for_number}" aria-valuemin="0" aria-valuemax="100" th:style="'width:'+ ${percentages.for_per}+'%;'" th:text="@{${percentages.for_number}} + '%'"></div>
+                            <div class="progress-bar progress-bar-danger progress-bar-striped" role="progressbar"
+                                 th:attr="aria-valuenow=${percentages.against_number}" aria-valuemin="0" aria-valuemax="100" th:style="'width:'+ ${percentages.against_per}+'%;'" th:text="@{${percentages.against_number}}"></div>
                         </div>
                     </div>
 

@@ -9,6 +9,7 @@ import br.edu.ifpb.entity.Topic;
 import br.edu.ifpb.entity.UserProfile;
 import br.edu.ifpb.repository.ImageTopicRepository;
 import br.edu.ifpb.repository.TopicRepository;
+import br.edu.ifpb.services.RelationshipService;
 import br.edu.ifpb.services.TopicoService;
 import br.edu.ifpb.validator.TopicValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
+import java.util.Map;
 
 /**
  *
@@ -42,14 +44,20 @@ public class TopicController {
     @Autowired
     private TopicoService topicoService;
 
+    @Autowired
+    private RelationshipService relationshipService;
+
     @RequestMapping(value = "/topic", method=RequestMethod.GET)
     public ModelAndView viewTopico(@RequestParam ("id") String idTopico){
 
         Topic topic = topicoService.findById(idTopico);
 
+        Map<String, String> percentages = relationshipService.getPercentages(topic);
+
         ModelAndView mav = new ModelAndView("topico");
 
         mav.addObject("topic", topic);
+        mav.addObject("percentages", percentages);
 
         return mav;
     }

@@ -1,5 +1,6 @@
 package br.edu.ifpb.controllers;
 
+import br.edu.ifpb.entity.Opinion;
 import br.edu.ifpb.entity.UserProfile;
 import br.edu.ifpb.repository.UserRepository;
 import br.edu.ifpb.validator.UserValidator;
@@ -52,9 +53,13 @@ public class CadastroController {
             user.setPassword(userValidator.getPassword());
 
             user = userRepository.save(user);
+            Opinion opinion = new Opinion();
+            opinion.setUser(user);
 
             if (user.getId() != 0) {
+
                 httpSession.setAttribute("user", user);
+                httpSession.setAttribute("opion", opinion);
             }
 
             return "redirect:/home";
