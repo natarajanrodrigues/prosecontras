@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 import static br.edu.ifpb.repository.ImageTopicRepository.saveTopicImage;
@@ -56,6 +57,18 @@ public class TopicoService {
         return topic;
     }
 
+    public List<Topic> listTopicsSortedByDateTime() {
+        List<Topic> allTopics = topicRepository.findAll();
+        Collections.sort(allTopics, Topic.Comparators.DATA);
+        return allTopics;
+    }
+
+    public List<Topic> listTipicsSortedByName() {
+        List<Topic> allTopics = topicRepository.findAll();
+        Collections.sort(allTopics, Topic.Comparators.NAME);
+        return allTopics;
+    }
+
     public List<Topic> findByNameLikeIgnoreCase (String parameterName) {
         return topicRepository.findByNameLikeIgnoreCase("%" + parameterName + "%");
     }
@@ -81,5 +94,7 @@ public class TopicoService {
 
         return ((float) againstQtde/userQtde)*100;
     }
+
+
 
 }
