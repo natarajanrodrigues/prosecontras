@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Pros-Contras</title>
+
+    <!-- Bootstrap -->
+    <link th:href="@{css/bootstrap-theme.min.css}" rel="stylesheet"/>
+    <link th:href="@{css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{css/fileinput.css}" rel="stylesheet"/>
+
+    <!--Font-awesome-->
+    <link th:href="@{css/font-awesome.css}" rel="stylesheet"/>
+
+</head>
+
+
+<body>
+
+<div class="modal fade" id="modal-pos">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title modal-title-center form-singin-heading">Editar Posicionameto</h3>
+            </div>
+            <div class="modal-body" id="corpoModalLogin">
+                <form id="formulario" class="form-signin" method="post" th:action="@{/positioningsave}">
+                    <div class="form-group has-feedback">
+                        <label for="posicao" class="control-label">Posição</label>
+                        <select class="form-control" id="posicao" name="posicao">
+                            <option value="FOR">A Favor</option>
+                            <option value="AGAINST">Contra</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="motivos" class="control-label">Motivações</label>
+                        <textarea id="motivos" name="motivos" class="form-control" rows="5" maxlength="5000" placeholder="Se desejar, digite aqui as motivações de seu posicionamento acerca do tópico. " ></textarea>
+                    </div>
+                    <input name="id" id="idTopic" class="hidden"/>
+                    <div class="modal-footer">
+                        <a href="" class="btn btn-default" data-dismiss="modal">Cancelar</a>
+                        <button id="btnEntrar" type="submit" class="btn btn-primary">Salvar</button>
+                    </div>
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<header th:include="home :: homeheader"></header>
+
+
+<div id="opinion" class="container col-md-8 col-md-offset-2"  style="min-height: 180px; padding-top: 100px;">
+
+    <div class="panel panel-default">
+        <div class="panel-heading text-center">
+            <h4>Trends</h4>
+        </div>
+
+        <div class="panel-body">
+
+            <div th:if="${error ne null}" class="alert alert-danger" role="alert" th:text="${error}"/>
+
+            <form th:action="@{/trendsearch}" method='post'>
+
+                <div class="form-group has-feedback col-md-12">
+                    <label for="targetTopic" class="control-label">Como pensam sobre</label>
+                    <select class="form-control" id="targetTopic" name="targetTopic">
+                        <option data-th-each="topic: ${topics}" th:value="${topic.id}" th:text="${topic.name}" />
+                    </select>
+                </div>
+                <div class="form-group has-feedback col-md-3">
+                    <label class="control-label">se elas são</label>
+                    <select class="form-control " id="statusStart" name="statusStart" th:value="${statusStart}">
+                        <option value="FOR">A Favor</option>
+                        <option value="AGAINST">Contra</option>
+                    </select>
+                </div>
+                <div class="form-group has-feedback col-md-12">
+                    <label for="topicStart" class="control-label">o tópico</label>
+                    <select class="form-control" id="startTopic" name="startTopic" th:value="${startTopic}">
+                        <option data-th-each="topic: ${topics}" th:value="${topic.id}" th:text="${topic.name}"/>
+                    </select>
+                </div>
+
+                <button type="submit" class="pull-right btn btn-primary"><span class=""/> Buscar</button>
+            </form>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+<!--FOOTER-->
+
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="js/jquery-3.1.0.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/fileinput.min.js"></script>
+<script >
+
+    $("#search").click(function (e) {
+        e.preventDefault();
+        $.ajax({
+            url: "/trendsearch2",
+            type: "POST",
+            data: {id: topicId},
+            success: function (response) {
+                if (response.comment !== undefined)
+                    $("#motivos").html(response.comment);
+                if (response.posicao !== undefined)
+                    $('#posicao' ).val(response.posicao);
+                if (response.topicId !== undefined)
+                    $('#idTopic' ).val(response.topicId);
+            }
+        });
+        $('#resultados').removeClass('hidden', 300);
+    });
+
+    function editPos() {
+
+//        $.ajax({
+//            url: "/positioningcontent",
+//            type: "GET",
+//            data: {id: topicId},
+//            success: function (response) {
+//                if (response.comment !== undefined)
+//                    $("#motivos").html(response.comment);
+//                if (response.posicao !== undefined)
+//                    $('#posicao' ).val(response.posicao);
+//                if (response.topicId !== undefined)
+//                    $('#idTopic' ).val(response.topicId);
+//            }
+//        });
+
+
+
+        $('#resultados').removeClass('hidden').show(200);
+    }
+</script>
+
+</body>
+
+</html>

@@ -134,7 +134,7 @@ public class TopicController {
     @RequestMapping(value = "/topicsearch", method = RequestMethod.POST)
     public ModelAndView buscar(@RequestParam("parametro") String parametroBusca) {
 
-        ModelAndView mav = new ModelAndView("topicsearch");
+        ModelAndView mav = new ModelAndView("/topicsearch");
 
         mav.addObject("parametro", parametroBusca);
 

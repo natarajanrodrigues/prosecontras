@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Pros-Contras</title>
+
+    <!-- Bootstrap -->
+    <link th:href="@{css/bootstrap-theme.min.css}" rel="stylesheet"/>
+    <link th:href="@{css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{css/fileinput.css}" rel="stylesheet"/>
+
+    <!--Font-awesome-->
+    <link th:href="@{css/font-awesome.css}" rel="stylesheet"/>
+
+</head>
+
+
+<body>
+
+<div class="modal fade" id="modal-pos">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title modal-title-center form-singin-heading">Editar Posicionameto</h3>
+            </div>
+            <div class="modal-body" id="corpoModalLogin">
+                <form id="formulario" class="form-signin" method="post" th:action="@{/positioningsave}">
+                    <div class="form-group has-feedback">
+                        <label for="posicao" class="control-label">Posição</label>
+                        <select class="form-control" id="posicao" name="posicao">
+                            <option value="FOR">A Favor</option>
+                            <option value="AGAINST">Contra</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="motivos" class="control-label">Motivações</label>
+                        <textarea id="motivos" name="motivos" class="form-control" rows="5" maxlength="5000" placeholder="Se desejar, digite aqui as motivações de seu posicionamento acerca do tópico. " ></textarea>
+                    </div>
+                    <input name="id" id="idTopic" class="hidden"/>
+                    <div class="modal-footer">
+                        <a href="" class="btn btn-default" data-dismiss="modal">Cancelar</a>
+                        <button id="btnEntrar" type="submit" class="btn btn-primary">Salvar</button>
+                    </div>
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<header th:include="home :: homeheader"></header>
+
+
+<div id="opinion" class="container col-md-8 col-md-offset-2"  style="min-height: 180px; padding-top: 100px;">
+
+    <div class="panel panel-default">
+        <div class="panel-heading text-center">
+            <h4>Trends</h4>
+        </div>
+
+        <div class="panel-body">
+
+            <div th:if="${error ne null}" class="alert alert-danger" role="alert" th:text="${error}"/>
+            As pessoas que se posicionam <strong th:text="${statusStart}"/> o tópico <strong th:text="${startTopic}"/>
+            também se posicionaram sobre <strong th:text="${targetTopic}"/> da seguinte forma:
+
+
+        </div>
+
+        <div class="panel-footer container-fluid" id="resultados">
+
+            <h4>Resultados</h4>
+
+            <div class="progress">
+                <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" th:if="${percentages.for_per != '0'}"
+                     th:attr="aria-valuenow=${percentages.for_number}" aria-valuemin="0" aria-valuemax="100" th:style="'width:'+ ${percentages.for_per}+'%;'" th:text="'A favor ('+ @{${percentages.for_number}} + '%)'"></div>
+                <div class="progress-bar progress-bar-danger progress-bar-striped" role="progressbar" th:if="${percentages.against_per != '0'}"
+                     th:attr="aria-valuenow=${percentages.against_number}" aria-valuemin="0" aria-valuemax="100" th:style="'width:'+ ${percentages.against_per}+'%;'" th:text="'Contra (' + @{${percentages.against_number}} + '%)'"></div>
+                <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" th:if="${percentages.against_per == '0' and percentages.for_per == '0'}"
+                     aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%;" >Busca sem correspondências</div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+<!--FOOTER-->
+
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="js/jquery-3.1.0.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/fileinput.min.js"></script>
+<script >
+
+
+
+    function editPos(topicId) {
+
+        $.ajax({
+            url: "/positioningcontent",
+            type: "GET",
+            data: {id: topicId},
+            success: function (response) {
+                if (response.comment !== undefined)
+                    $("#motivos").html(response.comment);
+                if (response.posicao !== undefined)
+                    $('#posicao' ).val(response.posicao);
+                if (response.topicId !== undefined)
+                    $('#idTopic' ).val(response.topicId);
+            }
+        });
+
+
+
+        $('#modal-pos').modal('show')
+    }
+</script>
+
+</body>
+
+</html>

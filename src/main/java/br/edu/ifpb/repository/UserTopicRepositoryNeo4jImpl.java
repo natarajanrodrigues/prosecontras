@@ -16,8 +16,8 @@ import java.util.*;
 @Repository
 public class UserTopicRepositoryNeo4jImpl implements UserTopicRepository {
 
-      private String path = "C:/Users/kieckegard/Documents/Neo4j/default.graphdb";
-    //private String path = "/Users/susanneferraz/Dropbox/ADS 2016.1/neo4j";
+//      private String path = "C:/Users/kieckegard/Documents/Neo4j/default.graphdb";
+    private String path = "/Users/susanneferraz/Dropbox/ADS 2016.1/neo4j";
 
     private File file;
     private GraphDatabaseService service;
