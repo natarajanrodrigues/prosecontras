@@ -78,4 +78,12 @@ public class OpinionService {
         return opinions;
     }
 
+    public List<Opinion> getOpinionsByUserOrderedByDate(UserProfile user) {
+        List<Opinion> opinions = opinionRepository.getOpinionsByUser(user);
+        Collections.sort(opinions);
+        return opinions;
+    }
+
+
+
 }

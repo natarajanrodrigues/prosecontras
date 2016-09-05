@@ -122,6 +122,7 @@ public class Topic implements MongoDbObject<Topic> {
         Document doc = new Document();
 
         doc.append("id", this.id);
+        doc.append("name", this.name);
         doc.append("user", this.actor.toDocument());
         doc.append("postedDateTime", this.postedDateTime.toString());
         doc.append("photoPath", this.photoPath);
@@ -134,6 +135,7 @@ public class Topic implements MongoDbObject<Topic> {
     public Topic fromDocument(Document document) {
 
         this.id = document.getLong("id");
+        this.name = document.getString("name");
         this.actor = new UserProfile().fromDocument(document.get("user", Document.class));
         this.postedDateTime = LocalDateTime.parse(document.getString("postedDateTime"));
         this.photoPath = document.getString("photoPath");

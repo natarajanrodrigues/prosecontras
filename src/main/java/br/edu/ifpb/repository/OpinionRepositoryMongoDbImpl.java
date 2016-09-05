@@ -58,4 +58,17 @@ public class OpinionRepositoryMongoDbImpl implements OpinionRepository {
 
         return opinions;
     }
+
+    @Override
+    public List<Opinion> getOpinionsByUser(UserProfile user) {
+        FindIterable<Document> iterable = this.collection.find(new Document("user.id",user.getId()));
+        List<Opinion> opinions = new LinkedList<>();
+        MongoCursor<Document> cursor = iterable.iterator();
+
+        while(cursor.hasNext()) {
+            opinions.add(new Opinion().fromDocument(cursor.next()));
+        }
+
+        return opinions;
+    }
 }
