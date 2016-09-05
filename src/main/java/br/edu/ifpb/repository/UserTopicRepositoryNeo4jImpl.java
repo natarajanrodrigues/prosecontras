@@ -8,9 +8,7 @@ import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Created by kieckegard on 01/09/2016.
@@ -18,8 +16,8 @@ import java.util.TreeSet;
 @Repository
 public class UserTopicRepositoryNeo4jImpl implements UserTopicRepository {
 
-//    private String path = "C:/Users/kieckegard/Documents/Neo4j/default.graphdb";
-    private String path = "/Users/susanneferraz/Dropbox/ADS 2016.1/neo4j";
+      private String path = "C:/Users/kieckegard/Documents/Neo4j/default.graphdb";
+    //private String path = "/Users/susanneferraz/Dropbox/ADS 2016.1/neo4j";
 
     private File file;
     private GraphDatabaseService service;
@@ -48,8 +46,7 @@ public class UserTopicRepositoryNeo4jImpl implements UserTopicRepository {
         }
     }
 
-    @Override
-    public void deleteSameRelationship(Node userNode, Long topicId) {
+    private void deleteSameRelationship(Node userNode, Long topicId) {
         for(Relationship r : userNode.getRelationships(Direction.OUTGOING)) {
             Long targetTopicId = (Long) r.getEndNode().getProperty("id");
             if(targetTopicId.equals(topicId)) {
@@ -58,6 +55,54 @@ public class UserTopicRepositoryNeo4jImpl implements UserTopicRepository {
                 System.out.println(targetTopicId + " != " + topicId);
             }
         }
+    }
+
+    @Override
+    public Map<String, Integer> getTrends(Topic startTopic, Status startStatus, Topic targetTopic, Status targetStatus) {
+
+        Map<String, Integer> result = new HashMap<>();
+
+        try(Transaction tx = service.beginTx()) {
+            Node startTopicNode = getTopicNodeById(startTopic.getId());
+
+            List<Node> startUsersNodes = getUserNodesByTopic(startTopicNode, startStatus);
+
+            Integer usersNodeQtde = startUsersNodes.size();
+            System.out.println("Users in relationship with topic "+startTopic.getId()+" : "+usersNodeQtde);
+            Integer usersNodeQtdeTarget = 0;
+
+
+            for (Node startUserNode : startUsersNodes) {
+
+                for (Relationship targetRelationship : startUserNode.getRelationships(Direction.OUTGOING, targetStatus)) {
+                    Long targetTopicId = (Long) targetRelationship.getEndNode().getProperty("id");
+                    System.out.println("Found "+targetStatus+" relationship with topic "+targetTopicId);
+                    if (targetTopic.getId().equals(targetTopicId))
+                        usersNodeQtdeTarget++;
+                }
+            }
+
+            System.out.println("UsersNodeQtdeTarget: "+usersNodeQtdeTarget);
+
+            tx.success();
+
+            result.put("total", usersNodeQtde);
+            result.put("found", usersNodeQtdeTarget);
+
+            return result;
+        }
+    }
+
+    private List<Node> getUserNodesByTopic(Node topic, Status status) {
+        List<Node> users = new LinkedList<>();
+        for (Relationship rel : topic.getRelationships(Direction.INCOMING, status)) {
+            System.out.println("Found relationship!");
+            Node userNode = rel.getStartNode();
+            System.out.println("id: "+userNode.getProperty("id"));
+            users.add(userNode);
+        }
+
+        return users;
     }
 
     private void persistUser(UserProfile user) {

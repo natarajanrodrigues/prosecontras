@@ -59,7 +59,7 @@ public class CadastroController {
             if (user.getId() != 0) {
 
                 httpSession.setAttribute("user", user);
-                httpSession.setAttribute("opion", opinion);
+                httpSession.setAttribute("opinion", opinion);
             }
 
             return "redirect:/home";
