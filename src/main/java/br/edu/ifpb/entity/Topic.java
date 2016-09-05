@@ -3,13 +3,14 @@ package br.edu.ifpb.entity;
 import org.bson.Document;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import javax.persistence.*;
 
 /**
  * Created by susanneferraz on 31/08/16.
  */
 @Entity
-public class Topic implements MongoDbObject<Topic> {
+public class Topic implements MongoDbObject<Topic>{
     @Id
     @GeneratedValue (strategy = GenerationType.AUTO)
     private Long id;
@@ -23,6 +24,13 @@ public class Topic implements MongoDbObject<Topic> {
     private Float againstPercentual;
     @ManyToOne
     private UserProfile actor;
+
+    public static class Comparators {
+
+        public static final Comparator<Topic> DATA = (Topic t1, Topic t2) -> t2.getPostedDateTime().compareTo(t1.getPostedDateTime());
+        public static final Comparator<Topic> NAME = (Topic t1, Topic t2) -> t1.getName().compareTo(t2.getName());
+
+    }
 
     public Topic() {
     }
