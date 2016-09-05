@@ -12,6 +12,8 @@ import com.google.gson.GsonBuilder;
 import org.apache.tomcat.jni.Local;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by kieckegard on 03/09/2016.
@@ -31,7 +33,7 @@ public class Loader {
 
         Topic topic = new Topic();
         topic.setName("Alguma coisa");
-        topic.setId(1L);
+        topic.setId(302L);
         topic.setActor(user);
         topic.setPostedDateTime(LocalDateTime.now());
         topic.setDescription("Alguma coisa");
@@ -97,9 +99,10 @@ public class Loader {
         /**
          * Persisting Vote (Neo4J)
          */
-        UserTopicRepository userTopicRepository = new UserTopicRepositoryNeo4jImpl();
-        userTopicRepository.newRelationship(user,topic,Status.FOR);
+        /*UserTopicRepository userTopicRepository = new UserTopicRepositoryNeo4jImpl();
+        userTopicRepository.newRelationship(user,topic,Status.FOR);*/
 
-
+        UserTopicRepositoryNeo4jImpl rep = new UserTopicRepositoryNeo4jImpl();
+        //rep.newRelationship(user,topic,Status.AGAINST);
     }
 }

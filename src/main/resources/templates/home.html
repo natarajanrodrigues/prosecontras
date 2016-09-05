@@ -36,14 +36,26 @@
                 <ul class="nav navbar-nav navbar-right">
                     
                     <li>
-                        <a th:if="${session.user != null}" href="novoTopico">Novo Tópico</a>
+                        <a th:if="${session.user != null}" href="novoTopico"><i class="fa fa-plus fa-fw"></i> Novo Tópico</a>
                     </li>
                     <li>
-                        <a href="opiniao">Opinião</a>
+                        <a href="opiniao"><i class="fa fa-check fa-fw"></i> Opinião</a>
                     </li>
-                    <li>
-                        <a th:href="@{/trends}">Trends</a>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <span>Trends </span><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a th:href="@{/trends}"><i class="fa fa-pie-chart fa-fw"></i> Procurar Tendência</a>
+                            </li>
+                            <li>
+                                <a th:href="@{/sugestoes}"><i class="fa fa-bullseye fa-fw"></i> Sugestões</a>
+                            </li>
+                        </ul>
                     </li>
+
+
 
                     <!--<li class="dropdown">-->
                         <!--<a class="dropdown-toggle" data-toggle="dropdown" href="#"><img style="min-height: 25px"></img>-->
@@ -53,8 +65,8 @@
 
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <img src="img/balance.jpg" class="profile-image img-circle" style="width: 25px; height:25px; object-fit: cover" />
-                            <span th:text="${session.user.name}"></span> 
+                            <!--<img src="img/balance.jpg" class="profile-image img-circle" style="width: 20px; height:20px; object-fit: cover" />-->
+                            <i class="fa fa-user fa-fw"></i><span th:text="${'  '+ session.user.name}"></span>
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">

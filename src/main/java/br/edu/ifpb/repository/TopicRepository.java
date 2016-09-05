@@ -19,7 +19,7 @@ public interface TopicRepository extends JpaRepository<Topic, Integer>{
 
     Topic save(Topic topic);
 
-    Topic findById(Integer id);
+    Topic findById(Long id);
 
     List<Topic> findByNameLikeIgnoreCase(String name);
 

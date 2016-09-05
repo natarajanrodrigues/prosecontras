@@ -2,13 +2,14 @@ package br.edu.ifpb.services;
 
 import br.edu.ifpb.entity.Opinion;
 import br.edu.ifpb.entity.Topic;
+import br.edu.ifpb.entity.UserProfile;
 import br.edu.ifpb.enums.Status;
+import br.edu.ifpb.repository.TopicRepository;
 import br.edu.ifpb.repository.UserTopicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by susanneferraz on 04/09/16.
@@ -17,10 +18,12 @@ import java.util.Map;
 public class RelationshipService {
 
     private static UserTopicRepository userTopicRepository;
+    private static TopicRepository topicRepository;
 
     @Autowired
-    public RelationshipService(UserTopicRepository userTopicRepository) {
+    public RelationshipService(UserTopicRepository userTopicRepository, TopicRepository topicRepository) {
         this.userTopicRepository = userTopicRepository;
+        this.topicRepository = topicRepository;
     }
 
 
@@ -83,6 +86,15 @@ public class RelationshipService {
 
     }
 
+    public List<Topic> getSuggestions(UserProfile user) {
+        Set<Long> sugestionsList = userTopicRepository.getSuggestedTopicsByUser(user);
+
+        List<Topic> topics = new ArrayList<>();
+        for (Long id : sugestionsList) {
+            topics.add(topicRepository.findById(id));
+        }
+        return topics;
+    }
 
 
 }

@@ -61,7 +61,7 @@ public class TopicoService {
     }
 
     public Topic findById(String id) {
-        return topicRepository.findById(Integer.parseInt(id));
+        return topicRepository.findById(Long.parseLong(id));
     }
 
     public void voteTopic(UserProfile user, Topic topic, Status status) {

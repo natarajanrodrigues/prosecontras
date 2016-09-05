@@ -60,41 +60,21 @@
 
     <div class="panel panel-default">
         <div class="panel-heading text-center">
-            <h4>Trends</h4>
+            <h4>Sugestões para você</h4>
         </div>
 
         <div class="panel-body">
 
-            <div th:if="${error ne null}" class="alert alert-danger" role="alert" th:text="${error}"/>
-
-            <form th:action="@{/trendsearch}" method='post'>
-
-
-                <div class="form-group has-feedback col-md-3">
-                    <label class="control-label">Pessoas que são</label>
-                    <select class="form-control " id="statusStart" name="statusStart" th:value="${statusStart}">
-                        <option value="FOR">A Favor</option>
-                        <option value="AGAINST">Contra</option>
-                    </select>
+            <div data-th-each="topic : ${topics}" class="col-sm-6 col-md-3 col-xs-6">
+                <div class="thumbnail container-fluid">
+                    <!--<a th:href="@{topic(id=${topic.id})}" ><img th:src="@{${topic.photoPath}}" style="width:290px; height: 290px; object-fit: cover" class='avatar img-thumbnail'/></a>-->
+                    <a th:href="@{topic(id=${topic.id})}" ><img th:src="@{'/image/' + ${topic.photoPath}}" style="width:250px; height: 200px; object-fit: cover" class='avatar img-thumbnail'/></a>
+                    <div class="caption text-center">
+                        <strong><p class="limit" th:text="${topic.name}"></p></strong>
+                    </div>
                 </div>
-                <div class="form-group has-feedback col-md-12">
-                    <label for="startTopic" class="control-label">com relação ao tópico</label>
-                    <select class="form-control" id="startTopic" name="startTopic" th:value="${startTopic}">
-                        <option data-th-each="topic: ${topics}" th:value="${topic.id}" th:text="${topic.name}"/>
-                    </select>
-                </div>
-                <div class="form-group has-feedback col-md-12">
-                    <label for="targetTopic" class="control-label">como pensam sobre...?</label>
-                    <select class="form-control" id="targetTopic" name="targetTopic">
-                        <option data-th-each="topic: ${topics}" th:value="${topic.id}" th:text="${topic.name}" />
-                    </select>
-                </div>
-
-                <button type="submit" class="pull-right btn btn-primary"><span class=""/> Buscar</button>
-            </form>
-
+            </div>
         </div>
-
 
     </div>
 

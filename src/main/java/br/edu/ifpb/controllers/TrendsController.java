@@ -1,6 +1,7 @@
 package br.edu.ifpb.controllers;
 
 import br.edu.ifpb.entity.Topic;
+import br.edu.ifpb.entity.UserProfile;
 import br.edu.ifpb.enums.Status;
 import br.edu.ifpb.services.RelationshipService;
 import br.edu.ifpb.services.TopicoService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +25,8 @@ import java.util.Map;
 @Controller
 public class TrendsController {
 
+    @Autowired
+    private HttpSession httpSession;
 
     @Autowired
     TopicoService topicoService;
@@ -64,6 +68,17 @@ public class TrendsController {
 
         return mav;
 
+    }
+
+    @RequestMapping(value = "/sugestoes", method= RequestMethod.GET)
+    public ModelAndView sugestoes(){
+
+        ModelAndView mav = new ModelAndView("sugestoes");
+
+        UserProfile user = (UserProfile) httpSession.getAttribute("user");
+        mav.addObject("topics", relationshipService.getSuggestions(user));
+
+        return mav;
     }
 
 }
