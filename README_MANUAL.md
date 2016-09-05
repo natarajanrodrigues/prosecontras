@@ -19,8 +19,7 @@ mongod
 ```
 mongo
 ```
-- Crie uma base de dados com o nome `prosecontras` e uma outra base de dados com o nome `topicimages` no client do mongo aberto, 
-utilizando os seguintes comandos:
+- Crie uma base de dados com o nome `prosecontras` e uma outra base de dados com o nome `topicimages` no client do mongo aberto utilizando os seguintes comandos:
 ```
 use topicimages
 use prosecontras
