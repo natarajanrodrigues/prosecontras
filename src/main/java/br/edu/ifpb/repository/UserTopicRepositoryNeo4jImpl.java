@@ -64,26 +64,27 @@ public class UserTopicRepositoryNeo4jImpl implements UserTopicRepository {
         Map<String, Integer> result = new HashMap<>();
 
         try (Transaction tx = service.beginTx()) {
+
             Node startTopicNode = getTopicNodeById(startTopic.getId());
 
             List<Node> startUsersNodes = getUserNodesByTopic(startTopicNode, startStatus);
 
-            Integer usersNodeQtde = startUsersNodes.size();
-            System.out.println("Users in relationship with topic " + startTopic.getId() + " : " + usersNodeQtde);
-            Integer usersNodeQtdeTarget = 0;
-
+            Integer usersNodeQtde = new Integer(0);
+            Integer usersNodeQtdeTarget = new Integer(0);
 
             for (Node startUserNode : startUsersNodes) {
 
-                for (Relationship targetRelationship : startUserNode.getRelationships(Direction.OUTGOING, targetStatus)) {
+                for (Relationship targetRelationship : startUserNode.getRelationships(Direction.OUTGOING)) {
+
                     Long targetTopicId = (Long) targetRelationship.getEndNode().getProperty("id");
-                    System.out.println("Found " + targetStatus + " relationship with topic " + targetTopicId);
-                    if (targetTopic.getId().equals(targetTopicId))
-                        usersNodeQtdeTarget++;
+
+                    if(targetTopicId.equals(targetTopicId)) {
+                        usersNodeQtde++;
+                        if (targetRelationship.isType(targetStatus))
+                            usersNodeQtdeTarget++;
+                    }
                 }
             }
-
-            System.out.println("UsersNodeQtdeTarget: " + usersNodeQtdeTarget);
 
             tx.success();
 
@@ -95,11 +96,12 @@ public class UserTopicRepositoryNeo4jImpl implements UserTopicRepository {
     }
 
     private List<Node> getUserNodesByTopic(Node topic, Status status) {
+
         List<Node> users = new LinkedList<>();
+
         for (Relationship rel : topic.getRelationships(Direction.INCOMING, status)) {
-            System.out.println("Found relationship!");
+
             Node userNode = rel.getStartNode();
-            System.out.println("id: " + userNode.getProperty("id"));
             users.add(userNode);
         }
 
@@ -291,7 +293,7 @@ public class UserTopicRepositoryNeo4jImpl implements UserTopicRepository {
     @Override
     public Integer getWhoVotedQtd() {
         ResourceIterator<Node> users = service.findNodes(Label.label("user"));
-        Integer count = 0;
+        Integer count = new Integer(0);
         while (users.hasNext()) {
             count++;
             users.next();
@@ -301,7 +303,7 @@ public class UserTopicRepositoryNeo4jImpl implements UserTopicRepository {
     }
 
     private Integer countRelationship(Iterator<Relationship> iterator) {
-        Integer forCount = 0;
+        Integer forCount = new Integer(0);
 
         while (iterator.hasNext()) {
             forCount++;
