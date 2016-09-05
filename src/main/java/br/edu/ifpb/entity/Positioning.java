@@ -47,7 +47,7 @@ public class Positioning implements MongoDbObject<Positioning> {
 
         doc.append("topic", this.topic.toDocument());
         doc.append("comment", this.comment);
-        doc.append("status", this.status.ordinal());
+        doc.append("status", this.status.toString());
 
         return doc;
     }
@@ -57,7 +57,7 @@ public class Positioning implements MongoDbObject<Positioning> {
 
         this.topic = new Topic().fromDocument(document.get("topic", Document.class));
         this.comment = document.getString("comment");
-        this.status = Status.values()[document.getInteger("status")];
+        this.status = Status.valueOf(document.getString("status"));
 
         return this;
     }

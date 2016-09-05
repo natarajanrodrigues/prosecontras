@@ -15,6 +15,8 @@
     <!--Font-awesome-->
     <link th:href="@{css/font-awesome.css}" rel="stylesheet"/>
 
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{img/logofavicon.png}"/>
+
 </head>
 
 
@@ -25,7 +27,7 @@
     <div class="container" style="width:70%; padding-top:100px">
         <div class="row">
 
-            <dizv class="col-md-8 col-md-push-2 well">
+            <div class="col-md-8 col-md-push-2 well">
                 
                 <form th:action="@{/novoTopico}" th:object="${topicValidator}" id="form_cada_user" method="post" enctype="multipart/form-data">
                     <div class="form-group has-feedback">
@@ -41,7 +43,8 @@
                             <label class="control-label">Selecione uma foto para o Tópico</label>
                             <input name="photo" type="file" class="file" />
                         </div>
-                        
+                        <div th:if="${erro}" class="alert alert-danger" role="alert" th:text="${erro}"/>
+
                         <div class="form-group has-feedback">
                             <label for="description" class="control-label">Descrição do Tópico</label>
                             <textarea type="text" id="description" class="form-control" name="description"
@@ -49,16 +52,15 @@
                             </textarea>
                             <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="help-block"></p>
                         </div>
-                        
-                        <div id="alertaErroLogin" class="alert alert-danger alert-dismissible hidden" role="alert" />
-
 
                     </div>
+
+
 
                     <button id="btnEnviar" type="submit" class="btn btn-primary">Enviar</button>
                 </form>
 
-            </dizv>
+            </div>
         </div>
     </div>
 

@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -66,6 +67,7 @@ public class TopicController {
         if (userOpinion != null)
             mav.addObject("userOpinions", userOpinion);
         mav.addObject("topic", topic);
+        mav.addObject("id", idTopico);
         mav.addObject("percentages", percentages);
 
         return mav;
@@ -88,31 +90,14 @@ public class TopicController {
         
         ModelAndView modelAndView = new ModelAndView("novoTopico");
 
+        if (file.getSize() == 0) {
+            model.addAttribute("erro", "Insira uma imagem para o tópico");
+            result.addError(new ObjectError("erroImagem", "faltou inserir imagem"));
+        }
+
         if (result.hasErrors()) {
             return new ModelAndView("novoTopico");
         } else {
-
-//            Topic topic = new Topic();
-//            topic.setName(name);
-//            topic.setDescription(description);
-//            topic.setPostedDateTime(LocalDateTime.now());
-//            topic.setActor(userProfile);
-//
-//            topic = topicRepository.save(topic);
-//
-//            try {
-////                String photoPath = PhotoUtils.salvarFoto("src/main/resources/static/img/topic/", topic.getId().toString()+file.getOriginalFilename(), file.getInputStream());
-////                topic.setPhotoPath(photoPath);
-//
-//                String objid = ImageTopicRepository.saveTopicImage(file, topic.getId());
-//                topic.setPhotoPath(objid);
-//
-//                topicRepository.save(topic);
-//                modelAndView.getModel().put("succes", true);
-//            }
-//            catch (IOException ex) {
-//
-//            }
 
             Topic topic = topicoService.saveTopic(
                     topicValidator.getName(),
@@ -121,7 +106,9 @@ public class TopicController {
                     file);
             if (topic != null) {
 
-                modelAndView.getModel().put("succes", true);
+//                modelAndView.getModel().put("succes", true);
+                modelAndView = new ModelAndView("novoTopicoSuccess");
+                modelAndView.addObject("id", topic.getId());
 
             }
             

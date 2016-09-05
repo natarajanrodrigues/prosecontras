@@ -15,6 +15,8 @@
     <!--Font-awesome-->
     <link th:href="@{css/font-awesome.css}" rel="stylesheet"/>
 
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{img/logofavicon.png}"/>
+
 </head>
 
 
@@ -68,7 +70,7 @@
             <div data-th-each="topic : ${topics}" class="col-sm-6 col-md-3 col-xs-6">
                 <div class="thumbnail container-fluid">
                     <!--<a th:href="@{topic(id=${topic.id})}" ><img th:src="@{${topic.photoPath}}" style="width:290px; height: 290px; object-fit: cover" class='avatar img-thumbnail'/></a>-->
-                    <a th:href="@{topic(id=${topic.id})}" ><img th:src="@{'/image/' + ${topic.photoPath}}" style="width:250px; height: 200px; object-fit: cover" class='avatar img-thumbnail'/></a>
+                    <a th:href="@{topic(id=${topic.id})}" ><img th:src="@{'/image/' + ${topic.photoPath}}" style="width:1500px; height: 150px; object-fit: cover" class='avatar img-thumbnail'/></a>
                     <div class="caption text-center">
                         <strong><p class="limit" th:text="${topic.name}"></p></strong>
                     </div>

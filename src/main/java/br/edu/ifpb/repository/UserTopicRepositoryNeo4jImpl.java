@@ -68,18 +68,26 @@ public class UserTopicRepositoryNeo4jImpl implements UserTopicRepository {
 
             List<Node> startUsersNodes = getUserNodesByTopic(startTopicNode, startStatus);
 
-            Integer usersNodeQtde = startUsersNodes.size();
+//            Integer usersNodeQtde = startUsersNodes.size();
+            Integer usersNodeQtde = 0;
             System.out.println("Users in relationship with topic " + startTopic.getId() + " : " + usersNodeQtde);
             Integer usersNodeQtdeTarget = 0;
 
 
             for (Node startUserNode : startUsersNodes) {
 
-                for (Relationship targetRelationship : startUserNode.getRelationships(Direction.OUTGOING, targetStatus)) {
+                for (Relationship targetRelationship : startUserNode.getRelationships(Direction.OUTGOING)) {
                     Long targetTopicId = (Long) targetRelationship.getEndNode().getProperty("id");
+
                     System.out.println("Found " + targetStatus + " relationship with topic " + targetTopicId);
-                    if (targetTopic.getId().equals(targetTopicId))
-                        usersNodeQtdeTarget++;
+
+                    if (targetTopic.getId().equals(targetTopicId)) {
+                        usersNodeQtde++;
+
+                        if (targetRelationship.isType(targetStatus))
+                            usersNodeQtdeTarget++;
+                    }
+
                 }
             }
 
@@ -96,12 +104,17 @@ public class UserTopicRepositoryNeo4jImpl implements UserTopicRepository {
 
     private List<Node> getUserNodesByTopic(Node topic, Status status) {
         List<Node> users = new LinkedList<>();
-        for (Relationship rel : topic.getRelationships(Direction.INCOMING, status)) {
-            System.out.println("Found relationship!");
-            Node userNode = rel.getStartNode();
-            System.out.println("id: " + userNode.getProperty("id"));
-            users.add(userNode);
+
+        if (topic != null && status != null) {
+            for (Relationship rel : topic.getRelationships(Direction.INCOMING, status)) {
+                System.out.println("Found relationship!");
+                Node userNode = rel.getStartNode();
+                System.out.println("id: " + userNode.getProperty("id"));
+                users.add(userNode);
+            }
         }
+
+
 
         return users;
     }
@@ -168,11 +181,13 @@ public class UserTopicRepositoryNeo4jImpl implements UserTopicRepository {
 
         Set<Long> topicsId = new TreeSet<>();
 
-        Iterable<Relationship> relationships = userNode.getRelationships(Direction.OUTGOING, Status.FOR);
-        Iterator<Relationship> iterator = relationships.iterator();
+        if (userNode != null) {
+            Iterable<Relationship> relationships = userNode.getRelationships(Direction.OUTGOING, Status.FOR);
+            Iterator<Relationship> iterator = relationships.iterator();
 
-        while (iterator.hasNext()) {
-            topicsId.add((Long) iterator.next().getEndNode().getProperty("id"));
+            while (iterator.hasNext()) {
+                topicsId.add((Long) iterator.next().getEndNode().getProperty("id"));
+            }
         }
 
         return topicsId;
@@ -181,12 +196,15 @@ public class UserTopicRepositoryNeo4jImpl implements UserTopicRepository {
     private Set<Long> getAgainstTopicsByUser(Node userNode) {
         Set<Long> topicsId = new TreeSet<>();
 
-        Iterable<Relationship> relationships = userNode.getRelationships(Direction.OUTGOING, Status.AGAINST);
-        Iterator<Relationship> iterator = relationships.iterator();
+        if (userNode != null) {
+            Iterable<Relationship> relationships = userNode.getRelationships(Direction.OUTGOING, Status.AGAINST);
+            Iterator<Relationship> iterator = relationships.iterator();
 
-        while (iterator.hasNext()) {
-            topicsId.add((Long) iterator.next().getEndNode().getProperty("id"));
+            while (iterator.hasNext()) {
+                topicsId.add((Long) iterator.next().getEndNode().getProperty("id"));
+            }
         }
+
 
         return topicsId;
     }

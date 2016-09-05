@@ -10,6 +10,7 @@
     <!-- Bootstrap -->
     <link th:href="@{css/bootstrap-theme.min.css}" rel="stylesheet"/>
     <link th:href="@{css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{css/fileinput.css}" rel="stylesheet"/>
 
     <!--Font-awesome-->
     <link th:href="@{css/font-awesome.css}" rel="stylesheet"/>
@@ -21,38 +22,22 @@
 
 <body>
 
-<header th:include="home :: homeheader"></header>
+    <header th:include="home :: homeheader"></header>
 
-<div class="container" style='padding-top: 100px;'>
+    <div class="container" style="width:70%; padding-top:100px">
 
-    <div id="barraBuscaLivros" class="well clearfix" >
 
-        <form th:action="@{/topicsearch}" method='post' id="formBusca" >
+            <div class="col-md-8 col-md-push-2">
 
-            <div class="row">
-                <div class="form-group col-sm-10">
-                    <div class="col-sm-12">
-                        <input id="parametro" name="parametro" type="text" class="form-control" placeholder="Buscar tópicos pelo nome" th:value="${parametro}"/>
-                    </div>
-                </div>
+                <div class="alert alert-success" role="alert" >Tópico cadastrado com sucesso!</div>
+                <a th:href="@{topic(id=${id})}"><button id="btnEnviar" type="submit" class="btn btn-primary">Ir para o Tópico</button></a>
 
-                <div class="form-group col-sm-1">
-                    <button id="buscaTopicos" type="submit" class="btn btn-primary">Buscar</button>
-                </div>
+
             </div>
 
-
-        </form>
-
-
-    </div>
-
-    <div th:include="home :: topics">
-
     </div>
 
 
-</div>
 
 <!--FOOTER-->
 
@@ -60,6 +45,8 @@
 <!-- Latest compiled and minified JavaScript -->
 <script src="js/jquery-3.1.0.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script src="js/fileinput.min.js"></script>
+<!--<script src="dist/js/funcoesBusca.js"></script>-->
 
 </body>
 

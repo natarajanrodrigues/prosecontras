@@ -15,6 +15,8 @@
     <!--Font-awesome-->
     <link th:href="@{css/font-awesome.css}" rel="stylesheet"/>
 
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{img/logofavicon.png}"/>
+
 </head>
 
 
@@ -59,20 +61,20 @@
                 <hr/>
 
                 <div>
-                    <h5 >Opiniões suas com esse tópico</h5>
+                    <h5 th:if="${userOpinions.size() ne 0}">Opiniões suas sobre o tópico</h5>
                     <ul class="list-group">
 
-                        <!--<li data-th-each="opinions : ${userOpinions}" class="list-group-item"-->
-                            <!--th:text="${#temporals.format(topic.postedDateTime, 'dd/MM/yyyy HH:mm') }">-->
-                            <!--<p>tetessssss</p>-->
-
-                        <!--</li>-->
 
                         <li data-th-each="opinions : ${userOpinions}" class="list-group-item container-fluid">
-                            <div class="container col-md-6" th:text="${#temporals.format(topic.postedDateTime, 'dd/MM/yyyy HH:mm') }">
+                            <div class="container col-md-6 small" th:text="${'Em ' + #temporals.format(opinions.dateTime, 'dd/MM/yyyy HH:mm') }">
                             </div>
-                            <!--<div class="container col-md-6 text-center" th:text="${opinions.posi}">-->
-                                <!--fasfsa-->
+                            <div data-th-each="positioning : ${opinions.positionings}" th:if="${positioning.topic.id.toString() eq id}" class="col-md-6" style="text-align: center; font-size: 110%">
+                                <div th:if="${positioning.topic.id.toString() eq id and positioning.status == T(br.edu.ifpb.enums.Status).FOR}" ><span class="glyphicon glyphicon-thumbs-up text-success" ></span></div>
+                                <div th:if="${positioning.topic.id.toString() eq id and positioning.status == T(br.edu.ifpb.enums.Status).AGAINST}" ><span class="glyphicon glyphicon-thumbs-down text-danger"></span></div>
+                                <!--<div  th:text="${id + ' - ' + positioning.topic.id}"></div>-->
+                            </div>
+                            <!--<div class="" th:text="${opinions.posi}">-->
+                                <!---->
                             <!--</div>-->
                         </li>
 
@@ -91,22 +93,7 @@
 
                 <h4 class="text-center">Posicionamentos</h4>
                 <table class="table table-striped">
-                    <!--<c:forEach var="av" items="${avaliacoesLivro}">-->
-                    <!--<tr>-->
-                        <!--<td>-->
-                        <!--<div class="media">-->
-                            <!--<div class="media-body media-right media-middle">-->
-                                <!--<p class="text-right">"TALTALTA"</p>-->
-                                <!--&lt;!&ndash;<input class="avUsuarios" dir="rtl" type="text" class="rating rating-loading" value="${av.rating}" data-size="xs" title=""/>&ndash;&gt;-->
-                            <!--</div>-->
-                            <!--<div class="media-right media-middle">-->
-                                <!--&lt;!&ndash;<img src="${av.usuario.foto}" class="media-object" style="width: 30px; height:30px; object-fit: cover">&ndash;&gt;-->
-                            <!--</div>-->
 
-                        <!--</div>-->
-                        <!--</td>-->
-                    <!--</tr>-->
-                    <!--</c:forEach>-->
                     <div class="container-fluid">
                         <div class="progress">
                             <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" th:if="${percentages.for_per != '0'}"
