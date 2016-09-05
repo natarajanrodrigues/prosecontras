@@ -72,7 +72,6 @@ public class OpiniaoController {
         Topic topic = topicoService.findById(idTopico);
 
         Opinion opiniao = (Opinion) httpSession.getAttribute("opinion");
-
         if (!opiniao.hasTopic(topic)) {
             Positioning newPositioning = new Positioning();
 
