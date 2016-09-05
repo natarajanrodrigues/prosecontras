@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Pros-Contras</title>
+
+    <!-- Bootstrap -->
+    <link th:href="@{css/bootstrap-theme.min.css}" rel="stylesheet"/>
+    <link th:href="@{css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{css/fileinput.css}" rel="stylesheet"/>
+    <link th:href="@{css/extra.css}" rel="stylesheet"/>
+
+</head>
+
+
+<body>
+
+
+<header th:include="home :: homeheader"></header>
+
+
+<div id="opinion" class="container col-md-8 col-md-offset-2"  style="min-height: 180px; padding-top: 100px;">
+
+    <div class="panel panel-default">
+        <div class="panel-heading text-center">
+            <h4>Timeline - minha opiniões</h4>
+        </div>
+
+        <div class="panel-body">
+            <!--<p th:if="${session.opinion.positionings.size() eq 0}">Você ainda não escolheu novos tópicos para opinar.</p>-->
+            <!--<div class="timeline-messages col-md-10 col-md-push-1">-->
+
+                <!--<div class="msg-time-chat">-->
+                    <!--<ul class="messages">-->
+                        <!--<li class="user clearfix" data-th-each="opinions : ${userOpinions}">-->
+                            <!--<a href="#" class="avatar">-->
+                                <!--<img src="${pageContext.request.contextPath}/${resposta.usuario.foto}" alt="" />-->
+                            <!--</a>-->
+                            <!--<div class="message">-->
+                                <!--<div class="head clearfix">-->
+                                    <!--<span class="name"><strong>${resposta.usuario.nome}</strong> disse:</span>-->
+                                    <!--<span class="time"><ct:FormatadorDataHora dataHora="${resposta.dataHora}" /></span>-->
+                                <!--</div>-->
+                                <!--<p>-->
+                                    <!--${resposta.resposta}-->
+                                <!--</p>-->
+                            <!--</div>-->
+                        <!--</li>-->
+                    <!--</ul>-->
+                <!--</div>-->
+            <!--</div>-->
+            <div class="container-fluid">
+                <ul class="timeline" data-th-each="opinion : ${userOpinions}">
+
+
+                    <li class="timeline" data-th-each="positioning : ${opinion.positionings}">
+
+                        <div th:if="${positioning.status == T(br.edu.ifpb.enums.Status).FOR}" class="timeline-badge success"><i class="glyphicon glyphicon-thumbs-up"></i></div>
+                        <div th:if="${positioning.status == T(br.edu.ifpb.enums.Status).AGAINST}" class="timeline-badge danger"><i class="glyphicon glyphicon-thumbs-down"></i></div>
+                        <div class="timeline-panel">
+
+                            <div class="timeline-heading">
+                                <div class="media">
+                                    <div class="media-left">
+                                        <a href="#">
+                                            <img class="media-object" th:src="@{'/image/' + ${positioning.topic.photoPath}}" style='width: 50px; height:50px; object-fit: cover'/>
+                                        </a>
+                                    </div>
+                                    <div class="media-body">
+                                        <h5 class="timeline-title" th:text="${positioning.topic.name}"></h5>
+                                        <p><small class="text-muted" th:text="${#temporals.format(positioning.topic.postedDateTime, 'dd/MM/yyyy HH:mm')}"><i class="glyphicon glyphicon-time"></i> </small></p>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="timeline-body">
+                                <p th:text="${positioning.comment}"></p>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!--FOOTER-->
+
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="js/jquery-3.1.0.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/fileinput.min.js"></script>
+<script >
+
+
+
+    function editPos(topicId) {
+
+        $.ajax({
+            url: "/positioningcontent",
+            type: "GET",
+            data: {id: topicId},
+            success: function (response) {
+                if (response.comment !== undefined)
+                    $("#motivos").html(response.comment);
+                if (response.posicao !== undefined)
+                    $('#posicao' ).val(response.posicao);
+                if (response.topicId !== undefined)
+                    $('#idTopic' ).val(response.topicId);
+            }
+        });
+
+
+
+        $('#modal-pos').modal('show')
+    }
+</script>
+
+</body>
+
+</html>

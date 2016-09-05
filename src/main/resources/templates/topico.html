@@ -52,20 +52,31 @@
                     <dd th:text="@{${topic.description}}"></dd>
                 </dl>
 
-                <!---->
 
-                <!--<c:if test="${usuario ne null && avaliacao ne null}">-->
-                    <!--<dl class="dl-horizontal">-->
-                        <!--<dt>Sua avaliação:</dt>-->
-                        <!--<div>-->
-                            <!--<dd>-->
-                                <!--${avaliacao.comentario}-->
-                            <!--</dd>-->
-                            <!--<dd><input id="minhaAvaliacao" name="minhaAvaliacao" type="text" class="rating" value="${avaliacao.rating}" data-size="xs"></dd>-->
-                        <!--</div>-->
+                <hr/>
 
-                    <!--</dl>-->
-                <!--</c:if>-->
+                <div>
+                    <h5 >Opiniões suas com esse tópico</h5>
+                    <ul class="list-group">
+
+                        <!--<li data-th-each="opinions : ${userOpinions}" class="list-group-item"-->
+                            <!--th:text="${#temporals.format(topic.postedDateTime, 'dd/MM/yyyy HH:mm') }">-->
+                            <!--<p>tetessssss</p>-->
+
+                        <!--</li>-->
+
+                        <li data-th-each="opinions : ${userOpinions}" class="list-group-item container-fluid">
+                            <div class="container col-md-6" th:text="${#temporals.format(topic.postedDateTime, 'dd/MM/yyyy HH:mm') }">
+                            </div>
+                            <!--<div class="container col-md-6 text-center" th:text="${opinions.posi}">-->
+                                <!--fasfsa-->
+                            <!--</div>-->
+                        </li>
+
+
+
+                    </ul>
+                </div>
 
                 <div>
                     <a th:href="@{/positioningadd(id=${topic.id})}" ><button class="btn btn-default"><span class="glyphicon glyphicon-plus-sign"></span> Adicionar em Opinião</button></a>

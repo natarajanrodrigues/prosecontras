@@ -5,10 +5,12 @@
  */
 package br.edu.ifpb.controllers;
 
+import br.edu.ifpb.entity.Opinion;
 import br.edu.ifpb.entity.Topic;
 import br.edu.ifpb.entity.UserProfile;
 import br.edu.ifpb.repository.ImageTopicRepository;
 import br.edu.ifpb.repository.TopicRepository;
+import br.edu.ifpb.services.OpinionService;
 import br.edu.ifpb.services.RelationshipService;
 import br.edu.ifpb.services.TopicoService;
 import br.edu.ifpb.validator.TopicValidator;
@@ -26,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,6 +50,9 @@ public class TopicController {
     @Autowired
     private RelationshipService relationshipService;
 
+    @Autowired
+    OpinionService opinionService;
+
     @RequestMapping(value = "/topic", method=RequestMethod.GET)
     public ModelAndView viewTopico(@RequestParam ("id") String idTopico){
 
@@ -56,6 +62,9 @@ public class TopicController {
 
         ModelAndView mav = new ModelAndView("topico");
 
+        List<Opinion> userOpinion = opinionService.getUserOpinionsByTopicOrderedByDate((UserProfile) httpSession.getAttribute("user"), topic);
+        if (userOpinion != null)
+            mav.addObject("userOpinions", userOpinion);
         mav.addObject("topic", topic);
         mav.addObject("percentages", percentages);
 
@@ -147,6 +156,8 @@ public class TopicController {
 //                .contentType(MediaType.parseMediaType(file.getGridFSFile().getMetadata().getString("content-type")))
                 .body(new InputStreamResource(new ByteArrayInputStream(file)));
     }
+
+
 
 
 }

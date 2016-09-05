@@ -14,5 +14,6 @@ public interface OpinionRepository {
     void save(Opinion opinion);
     List<Opinion> listByTopic(Topic topic);
     List<Opinion> getUserOpinionsByTopic(UserProfile user, Topic topic);
+    List<Opinion> getOpinionsByUser(UserProfile user);
 
 }

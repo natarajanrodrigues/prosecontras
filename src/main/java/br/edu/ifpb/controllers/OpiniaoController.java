@@ -10,26 +10,21 @@ import br.edu.ifpb.entity.Positioning;
 import br.edu.ifpb.entity.Topic;
 import br.edu.ifpb.entity.UserProfile;
 import br.edu.ifpb.enums.Status;
-import br.edu.ifpb.repository.ImageTopicRepository;
 import br.edu.ifpb.services.OpinionService;
 import br.edu.ifpb.services.TopicoService;
 import br.edu.ifpb.utils.JsonView;
-import br.edu.ifpb.validator.TopicValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-import java.io.ByteArrayInputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -150,8 +145,6 @@ public class OpiniaoController {
 
         Opinion opiniao = (Opinion) httpSession.getAttribute("opinion");
 
-//        ModelAndView mav;
-
         boolean ready = false;
         if (opiniao.getPositionings().size() != 0) {
             ready = true;
@@ -175,13 +168,20 @@ public class OpiniaoController {
             return "opiniao";
         }
 
-
-
-
-
     }
 
 
+    @RequestMapping(value = "/timeline", method=RequestMethod.GET)
+    public ModelAndView timeline(){
 
+        List<Opinion> userOpinion = opinionService.getOpinionsByUserOrderedByDate((UserProfile) httpSession.getAttribute("user"));
+//        if (userOpinion != null)
+
+        ModelAndView mav = new ModelAndView("timeline");
+
+        mav.addObject("userOpinions", userOpinion);
+
+        return mav;
+    }
 
 }
