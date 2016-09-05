@@ -17,8 +17,8 @@ import java.util.*;
 @Repository
 public class UserTopicRepositoryNeo4jImpl implements UserTopicRepository {
 
-    //private String path = "C:/Users/kieckegard/Documents/Neo4j/default.graphdb";
-    private String path = "/Users/susanneferraz/Dropbox/ADS 2016.1/neo4j";
+    private String path = "C:/Users/kieckegard/Documents/Neo4j/default.graphdb";
+    //private String path = "/Users/susanneferraz/Dropbox/ADS 2016.1/neo4j";
 
     private File file;
     private GraphDatabaseService service;
@@ -156,11 +156,14 @@ public class UserTopicRepositoryNeo4jImpl implements UserTopicRepository {
             Set<Long> forTopicsId = getForTopicsByUser(userNode);
             Set<Long> againstTopicsId = getAgainstTopicsByUser(userNode);
 
-            Set<Long> suggestedTopics = getSuggestedTopicsByForTopics(forTopicsId, againstTopicsId, user.getId());
+            Set<Long> suggestedForTopics = getSuggestedTopicsByTopics(forTopicsId, againstTopicsId, user.getId(), Status.FOR);
+            Set<Long> suggestedAgainstTopics = getSuggestedTopicsByTopics(forTopicsId, againstTopicsId, user.getId(), Status.AGAINST);
 
             tx.success();
 
-            return suggestedTopics;
+            suggestedForTopics.addAll(suggestedAgainstTopics);
+
+            return suggestedForTopics;
         }
     }
 
@@ -191,36 +194,49 @@ public class UserTopicRepositoryNeo4jImpl implements UserTopicRepository {
         return topicsId;
     }
 
-    private Set<Long> getSuggestedTopicsByForTopics(Set<Long> forTopics, Set<Long> againstTopics, Long userId) {
+    private Set<Long> getSuggestedTopicsByTopics(Set<Long> forTopics, Set<Long> againstTopics, Long userId, Status status) {
 
         Set<Long> suggestTopics = new TreeSet<>();
 
-        for (Long topicId : forTopics) {
-            Node forTopic = getTopicNodeById(topicId);
+        if(status == Status.FOR) {
+            System.out.println("Verificando tópicos a favor");
+            for (Long topicId : forTopics)
+                suggestTopics.addAll(getRelatedTopicsByTopic(forTopics, againstTopics, userId, status, topicId));
+        } else if (status == Status.AGAINST) {
+            System.out.println("Verificando tópicos contra");
+            for (Long topicId : againstTopics)
+                suggestTopics.addAll(getRelatedTopicsByTopic(forTopics, againstTopics, userId, status, topicId));
+        }
 
-            for (Relationship relationship : forTopic.getRelationships(Direction.INCOMING, Status.FOR)) {
+        return suggestTopics;
+    }
 
-                Node likedUser = relationship.getStartNode();
+    private Set<Long> getRelatedTopicsByTopic(Set<Long> forTopics, Set<Long> againstTopics, Long userId, Status status, Long topicId) {
+        Set<Long> relatedTopics = new TreeSet<>();
 
-                Long likedUserId = (Long) likedUser.getProperty("id");
+        Node forTopic = getTopicNodeById(topicId);
 
-                if(!likedUserId.equals(userId)) {
+        for (Relationship relationship : forTopic.getRelationships(Direction.INCOMING, status)) {
 
-                    for (Relationship likedUserForTopicRelation : likedUser.getRelationships(Direction.OUTGOING, Status.FOR)) {
+            Node likedUser = relationship.getStartNode();
 
-                        Node suggestTopic = likedUserForTopicRelation.getEndNode();
-                        Long suggestTopicId = (Long) suggestTopic.getProperty("id");
+            Long likedUserId = (Long) likedUser.getProperty("id");
 
-                        if (!forTopics.contains(suggestTopicId) && !againstTopics.contains(suggestTopicId))
-                            suggestTopics.add(suggestTopicId);
-                    }
+            if(!likedUserId.equals(userId)) {
+
+                for (Relationship likedUserForTopicRelation : likedUser.getRelationships(Direction.OUTGOING, Status.FOR)) {
+
+                    Node suggestTopic = likedUserForTopicRelation.getEndNode();
+                    Long suggestTopicId = (Long) suggestTopic.getProperty("id");
+
+                    if (!forTopics.contains(suggestTopicId) && !againstTopics.contains(suggestTopicId))
+                        relatedTopics.add(suggestTopicId);
                 }
-
             }
 
         }
 
-        return suggestTopics;
+        return relatedTopics;
     }
 
     @Override
