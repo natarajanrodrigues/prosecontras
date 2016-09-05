@@ -23,10 +23,10 @@ public interface UserTopicRepository {
 
     /**
      * Busca os tópicos sugeridos de acordo com uma coleção de tópicos A FAVOR passada por parâmetro.
-     * @param topics
+     * @param user
      * @return
      */
-    Set<Long> getSuggestedTopicsByForTopics(Set<Topic> topics);
+    Set<Long> getSuggestedTopicsByUser(UserProfile user);
 
     /**
      * Retorna a quantidade de usuários que votaram a favor em um determinado tópico.
