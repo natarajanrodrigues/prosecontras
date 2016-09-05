@@ -1,28 +1,44 @@
-### MANUAL DE IMPLANTAÇÃO
+## MANUAL DE IMPLANTAÇÃO
 
-Para realizar correta implantação seguir os passos:
+### Redis - Sistema de Cache
 
-#### 1.  Criar banco MongoDB GridFs para salvar imagens
+- Baixe uma versão estável do Redis [aqui](http://redis.io/download).
+- Para inicializar o Redis, no terminal, insira o seguinte comando:
+```
+redis-server
+```
 
-    * Startar o MongoDB
+### MongoDB - Persistência de Opiniões e imagens usando GRIDFS
 
+- Baixe uma versão estável do MongoDB [aqui](https://www.mongodb.com/download-center).
+- Para inicializar o servidor do Mongo no terminal, insira o comando: 
 ```
 mongod
 ```
-
-Em outra janela do seu terminal/console
-
-
+- Para inicializar um client do Mongo no terminal, insira o comando: 
 ```
 mongo
-use topicimages
 ```
-
-
-#### 2.  Criar banco de dados MongoDB para salvar Opiniões:
-
-Na mesma janela em que criamos o banco acima, executar:
-
+- Crie uma base de dados com o nome `prosecontras` e uma outra base de dados com o nome `topicimages` no client do mongo aberto, 
+utilizando os seguintes comandos:
 ```
 use topicimages
+use prosecontras
 ```
+- Ainda no client do mongo, na base de dados `prosecontras`, crie uma coleção chamada `opinion` através do comando:
+```
+db.createCollection("opinion");
+```
+
+### Neo4J - Persistência dos relacionamentos entre Usuário e Tópicos votados.
+- Baixe uma versão estável do Neo4J [aqui](https://neo4j.com/download/).
+- Inicialize o neo4J.
+
+### PostgreSQL - Persistência de Usuários e Tópicos
+
+- Instale uma versão estável do PostgreSQL [aqui](https://www.postgresql.org/download/).
+- Através do pgadmin ou por linha de comando, crie uma base de dados com o nome `prosecontras`.
+
+### That's it, you're ready to go
+
+
