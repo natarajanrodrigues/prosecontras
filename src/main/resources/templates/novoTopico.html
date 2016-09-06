@@ -15,6 +15,8 @@
     <!--Font-awesome-->
     <link th:href="@{css/font-awesome.css}" rel="stylesheet"/>
 
+    <link th:href="@{css/extra.css}" rel="stylesheet"/>
+
     <link rel="icon" type="image/png" sizes="32x32" th:href="@{img/logofavicon.png}"/>
 
 </head>
@@ -22,13 +24,15 @@
 
 <body>
 
-    <header th:include="home :: homeheader"></header>
+    <div class="container">
 
-    <div class="container" style="width:70%; padding-top:100px">
+        <div th:include="home :: homeheader"></div>
+
+
         <div class="row">
 
             <div class="col-md-8 col-md-push-2 well">
-                
+
                 <form th:action="@{/novoTopico}" th:object="${topicValidator}" id="form_cada_user" method="post" enctype="multipart/form-data">
                     <div class="form-group has-feedback">
                         <label for="name" class="control-label">Título do Tópico</label>
@@ -38,7 +42,7 @@
 
                     </div>
                     <div class="container row" style="width: 80%">
-                        
+
                         <div class="form-group">
                             <label class="control-label">Selecione uma foto para o Tópico</label>
                             <input name="photo" type="file" class="file" />
@@ -62,18 +66,18 @@
 
             </div>
         </div>
+
+
     </div>
 
+    <!--FOOTER-->
+    <footer class="footer" th:include="index :: newfooter"></footer>
 
-
-<!--FOOTER-->
-
-
-<!-- Latest compiled and minified JavaScript -->
-<script src="js/jquery-3.1.0.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/fileinput.min.js"></script>
-<!--<script src="dist/js/funcoesBusca.js"></script>-->
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="js/jquery-3.1.0.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/fileinput.min.js"></script>
+    <!--<script src="dist/js/funcoesBusca.js"></script>-->
 
 </body>
 

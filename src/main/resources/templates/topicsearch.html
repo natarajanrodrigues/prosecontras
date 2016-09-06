@@ -14,53 +14,51 @@
     <!--Font-awesome-->
     <link th:href="@{css/font-awesome.css}" rel="stylesheet"/>
 
+    <link th:href="@{css/extra.css}" rel="stylesheet"/>
+
     <link rel="icon" type="image/png" sizes="32x32" th:href="@{img/logofavicon.png}"/>
 
 </head>
 
 
-<body>
+    <body>
 
-<header th:include="home :: homeheader"></header>
+        <div class="container">
 
-<div class="container" style='padding-top: 100px;'>
+            <div th:include="home :: homeheader"></div>
 
-    <div id="barraBuscaLivros" class="well clearfix" >
+            <div id="" class="well clearfix" >
 
-        <form th:action="@{/topicsearch}" method='post' id="formBusca" >
+                <form th:action="@{/topicsearch}" method='post' id="formBusca" >
 
-            <div class="row">
-                <div class="form-group col-sm-10">
-                    <div class="col-sm-12">
-                        <input id="parametro" name="parametro" type="text" class="form-control" placeholder="Buscar tópicos pelo nome" th:value="${parametro}"/>
+                    <div class="row">
+                        <div class="form-group col-sm-10">
+                            <div class="col-sm-12">
+                                <input id="parametro" name="parametro" type="text" class="form-control" placeholder="Buscar tópicos pelo nome" th:value="${parametro}"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-1">
+                            <button id="buscaTopicos" type="submit" class="btn btn-primary">Buscar</button>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group col-sm-1">
-                    <button id="buscaTopicos" type="submit" class="btn btn-primary">Buscar</button>
-                </div>
+                </form>
+
             </div>
 
+            <div th:include="home :: topics">
+            </div>
 
-        </form>
+        </div>
 
+        <!--FOOTER-->
+        <footer class="footer" th:include="index :: newfooter"></footer>
 
-    </div>
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="js/jquery-3.1.0.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
 
-    <div th:include="home :: topics">
-
-    </div>
-
-
-</div>
-
-<!--FOOTER-->
-
-
-<!-- Latest compiled and minified JavaScript -->
-<script src="js/jquery-3.1.0.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-
-</body>
+    </body>
 
 </html>

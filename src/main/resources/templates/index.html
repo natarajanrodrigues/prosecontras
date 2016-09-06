@@ -13,71 +13,50 @@
 
     <!--Font-awesome-->
     <link th:href="@{css/font-awesome.css}" rel="stylesheet"/>
+    <link th:href="@{css/extra.css}" rel="stylesheet"/>
 
     <link rel="icon" type="image/png" sizes="32x32" th:href="@{img/logofavicon.png}"/>
 
 </head>
 
 
-<body>
-<!--Modal Login-->
-<div class="modal fade" id="modal-login">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h3 class="modal-title modal-title-center form-singin-heading">Login</h3>
-            </div>
-            <div class="modal-body" id="corpoModalLogin">
-                <form id="formulario" class="form-signin" method="post">
-                    <div class="form-group">
-                        <label for="email" class="control-label">Email</label>
-                        <input type="text" id="email" name="email" class="form-control"/>
+    <body>
+        <!--Modal Login-->
+        <div class="modal fade" id="modal-login">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3 class="modal-title modal-title-center form-singin-heading">Login</h3>
                     </div>
-                    <div class="form-group">
-                        <label for="password" class="control-label">Senha</label>
-                        <input type="password" id="password" name="password" class="form-control" />
+                    <div class="modal-body" id="corpoModalLogin">
+                        <form id="formulario" class="form-signin" method="post">
+                            <div class="form-group">
+                                <label for="email" class="control-label">Email</label>
+                                <input type="text" id="email" name="email" class="form-control"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="password" class="control-label">Senha</label>
+                                <input type="password" id="password" name="password" class="form-control" />
+                            </div>
+                            <div id="alertaErroLogin" class="alert alert-danger alert-dismissible hidden" role="alert" >
+                                <strong>Falha no login!</strong> Informações de email e senha incorretas.
+                            </div>
+                        </form>
                     </div>
-                    <div id="alertaErroLogin" class="alert alert-danger alert-dismissible hidden" role="alert" >
-                        <strong>Falha no login!</strong> Informações de email e senha incorretas.
-                    </div>
-                </form>
-            </div>
 
-            <div class="modal-footer">
-                <a href="" class="btn btn-default" data-dismiss="modal">Cancelar</a>
+                    <div class="modal-footer">
+                        <a href="" class="btn btn-default" data-dismiss="modal">Cancelar</a>
 
-                <a id="btnEntrar" type="submit" class="btn btn-primary">Entrar</a>
+                        <a id="btnEntrar" type="submit" class="btn btn-primary">Entrar</a>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
 
-<header>
-    <nav class="navbar navbar-default navbar-fixed-top navbar-inverse">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#example">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <!--<a href="" class="navbar-brand">Pros e contras</a>-->
-                <a href=""><img src="img/logopreto.png" class="navbar-brand" style="padding: 10px"/></a>
-            </div>
-            <div class="collpase navbar-collapse" id="example">
-
-                <button type="button" class="btn btn-primary navbar-btn navbar-right" data-toggle="modal" data-target="#modal-login">Login</button>
-
-            </div>
-
-        </div>
-    </nav>
-
-    <!--<div class="container">-->
         <div class="jumbotron" style="background-image: url('img/capa.jpg'); color: #5e5e5e;  margin-top: 50px; object-fit: cover; min-height: 450px;">
             <div class="container">
-                <div class="row centering jumbotron" style="background-color: rgba(255,255,255,0.7);">
+                <div class="row centering jumbotron" style="background-color: rgba(255,255,255,0.85);">
                     <h1>Pros e Contras</h1>
                     <h3>A gente conta pra você.</h3>
                     <!--<p></p>-->
@@ -85,76 +64,109 @@
                 </div>
             </div>
         </div>
-    <!--</div>-->
-</header>
 
-<div id="livros" class="container"  style="min-height: 180px">
+        <div class="container">
+            <div class="">
+                <nav class="navbar navbar-default navbar-fixed-top navbar-inverse">
+                    <div class="container">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#example">
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <!--<a href="" class="navbar-brand">Pros e contras</a>-->
+                            <a href=""><img src="img/logopreto.png" class="navbar-brand" style="padding: 10px"/></a>
+                        </div>
+                        <div class="collpase navbar-collapse" id="example">
 
-</div>
+                            <button type="button" class="btn btn-primary navbar-btn navbar-right" data-toggle="modal" data-target="#modal-login">Login</button>
 
-<!--FOOTER-->
+                        </div>
 
-
-<!-- Latest compiled and minified JavaScript -->
-<script src="js/jquery-3.1.0.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<!--<script src="dist/js/funcoesBusca.js"></script>-->
-
-<script>
-
-    $(document).ready(function () {
-        $("#modal-login").on("shown.bs.modal", function () {
-            $("#email").focus();
-        });
-
-        $("#modal-login").on("hidden.bs.modal", function () {
-            $('#alertaErroLogin').addClass("hidden");
-        });
-
-        //funções para quando o botão entrar é clicado
-        $('#btnEntrar').click(function ()
-        {
-
-            $('#alertaErroLogin').addClass("hidden").hide();
-            var email = $('#email').val();
-            var pwd = $('#password').val();
+                    </div>
+                </nav>
+            </div>
+        </div>
 
 
-            $.ajax({
-                type: "POST",
-                url: "login",
 
-                data: {"email": email, "password": pwd},
-                success: function (response) {
-//                    alert(response.error);
+        <!--FOOTER-->
+        <div th:fragment="newfooter">
+            <footer class="footer navbar-inverse" >
+                <div class="container text-center" style="padding-top:20px">
+                    <div class="">
+                        <p class="text-muted ">
+                            Desenvolvido por <strong>NameNotFoundException</strong></p>
+                        <p class="text-muted ">(Natarajan Ferreira Rodrigues e Pedro Arthur Vasconcelos)</p>
+                    </div>
 
-                    if (response.error !== undefined) {
-                        $('#alertaErroLogin').show(250).removeClass("hidden");
-                    } else {
-                        $(location).attr('href', 'home');
+                </div>
+            </footer>
+        </div>
+
+
+
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="js/jquery-3.1.0.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <!--<script src="dist/js/funcoesBusca.js"></script>-->
+
+        <script>
+
+            $(document).ready(function () {
+                $("#modal-login").on("shown.bs.modal", function () {
+                    $("#email").focus();
+                });
+
+                $("#modal-login").on("hidden.bs.modal", function () {
+                    $('#alertaErroLogin').addClass("hidden");
+                });
+
+                //funções para quando o botão entrar é clicado
+                $('#btnEntrar').click(function ()
+                {
+
+                    $('#alertaErroLogin').addClass("hidden").hide();
+                    var email = $('#email').val();
+                    var pwd = $('#password').val();
+
+
+                    $.ajax({
+                        type: "POST",
+                        url: "login",
+
+                        data: {"email": email, "password": pwd},
+                        success: function (response) {
+
+                            if (response.error !== undefined) {
+                                $('#alertaErroLogin').show(250).removeClass("hidden");
+                            } else {
+                                $(location).attr('href', 'home');
+                            }
+                        }
+                    });
+                });
+
+
+                //função para quando pressiona ENTER dentro do input da senha ou login
+                $('#email').keypress(function (e) {
+
+                    if (e.which === 13) { // se digitar um enter nesse componente (password)
+                        $('#btnEntrar').click();
                     }
-                }
+                });
+
+                $('#password').keypress(function (e) {
+                    if (e.which === 13) { // se digitar um enter nesse componente (password)
+                        $('#btnEntrar').click();
+                    }
+                });
+
             });
-        });
 
-
-        //função para quando pressiona ENTER dentro do input da senha ou login
-        $('#email').keypress(function (e) {
-
-            if (e.which === 13) { // se digitar um enter nesse componente (password)
-                $('#btnEntrar').click();
-            }
-        });
-
-        $('#password').keypress(function (e) {
-            if (e.which === 13) { // se digitar um enter nesse componente (password)
-                $('#btnEntrar').click();
-            }
-        });
-
-    });
-
-</script>
-</body>
+        </script>
+    </body>
 
 </html>

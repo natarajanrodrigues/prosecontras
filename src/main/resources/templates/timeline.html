@@ -16,118 +16,78 @@
     <!--Font-awesome-->
     <link th:href="@{css/font-awesome.css}" rel="stylesheet"/>
 
+    <link th:href="@{css/extra.css}" rel="stylesheet"/>
+
     <link rel="icon" type="image/png" sizes="32x32" th:href="@{img/logofavicon.png}"/>
 
 </head>
 
 
-<body>
+    <body>
+
+        <div class="container">
+
+            <div th:include="home :: homeheader"></div>
+
+            <div id="opinion" class="container col-md-8 col-md-offset-2"  style="min-height: 180px; ">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading text-center">
+                        <h4>Timeline - minha opiniões</h4>
+                    </div>
+
+                    <div class="panel-body">
+
+                        <div class="container-fluid">
+                            <ul class="timeline" data-th-each="opinion : ${userOpinions}">
 
 
-<header th:include="home :: homeheader"></header>
+                                <li class="timeline" data-th-each="positioning : ${opinion.positionings}">
 
+                                    <div th:if="${positioning.status == T(br.edu.ifpb.enums.Status).FOR}" class="timeline-badge success"><i class="glyphicon glyphicon-thumbs-up"></i></div>
+                                    <div th:if="${positioning.status == T(br.edu.ifpb.enums.Status).AGAINST}" class="timeline-badge danger"><i class="glyphicon glyphicon-thumbs-down"></i></div>
+                                    <div class="timeline-panel">
 
-<div id="opinion" class="container col-md-8 col-md-offset-2"  style="min-height: 180px; padding-top: 100px;">
+                                        <div class="timeline-heading">
+                                            <div class="media">
+                                                <div class="media-left">
+                                                    <a href="#">
+                                                        <img class="media-object" th:src="@{'/image/' + ${positioning.topic.photoPath}}" style='width: 50px; height:50px; object-fit: cover'/>
+                                                    </a>
+                                                </div>
+                                                <div class="media-body">
+                                                    <h5 class="timeline-title" th:text="${positioning.topic.name}"></h5>
+                                                    <p><small class="text-muted" th:text="${#temporals.format(positioning.topic.postedDateTime, 'dd/MM/yyyy HH:mm')}"><i class="glyphicon glyphicon-time"></i> </small></p>
+                                                </div>
+                                            </div>
 
-    <div class="panel panel-default">
-        <div class="panel-heading text-center">
-            <h4>Timeline - minha opiniões</h4>
-        </div>
-
-        <div class="panel-body">
-            <!--<p th:if="${session.opinion.positionings.size() eq 0}">Você ainda não escolheu novos tópicos para opinar.</p>-->
-            <!--<div class="timeline-messages col-md-10 col-md-push-1">-->
-
-                <!--<div class="msg-time-chat">-->
-                    <!--<ul class="messages">-->
-                        <!--<li class="user clearfix" data-th-each="opinions : ${userOpinions}">-->
-                            <!--<a href="#" class="avatar">-->
-                                <!--<img src="${pageContext.request.contextPath}/${resposta.usuario.foto}" alt="" />-->
-                            <!--</a>-->
-                            <!--<div class="message">-->
-                                <!--<div class="head clearfix">-->
-                                    <!--<span class="name"><strong>${resposta.usuario.nome}</strong> disse:</span>-->
-                                    <!--<span class="time"><ct:FormatadorDataHora dataHora="${resposta.dataHora}" /></span>-->
-                                <!--</div>-->
-                                <!--<p>-->
-                                    <!--${resposta.resposta}-->
-                                <!--</p>-->
-                            <!--</div>-->
-                        <!--</li>-->
-                    <!--</ul>-->
-                <!--</div>-->
-            <!--</div>-->
-            <div class="container-fluid">
-                <ul class="timeline" data-th-each="opinion : ${userOpinions}">
-
-
-                    <li class="timeline" data-th-each="positioning : ${opinion.positionings}">
-
-                        <div th:if="${positioning.status == T(br.edu.ifpb.enums.Status).FOR}" class="timeline-badge success"><i class="glyphicon glyphicon-thumbs-up"></i></div>
-                        <div th:if="${positioning.status == T(br.edu.ifpb.enums.Status).AGAINST}" class="timeline-badge danger"><i class="glyphicon glyphicon-thumbs-down"></i></div>
-                        <div class="timeline-panel">
-
-                            <div class="timeline-heading">
-                                <div class="media">
-                                    <div class="media-left">
-                                        <a href="#">
-                                            <img class="media-object" th:src="@{'/image/' + ${positioning.topic.photoPath}}" style='width: 50px; height:50px; object-fit: cover'/>
-                                        </a>
+                                        </div>
+                                        <div class="timeline-body">
+                                            <p th:text="${positioning.comment}"></p>
+                                        </div>
                                     </div>
-                                    <div class="media-body">
-                                        <h5 class="timeline-title" th:text="${positioning.topic.name}"></h5>
-                                        <p><small class="text-muted" th:text="${#temporals.format(positioning.topic.postedDateTime, 'dd/MM/yyyy HH:mm')}"><i class="glyphicon glyphicon-time"></i> </small></p>
-                                    </div>
-                                </div>
+                                </li>
+                            </ul>
 
-                            </div>
-                            <div class="timeline-body">
-                                <p th:text="${positioning.comment}"></p>
-                            </div>
                         </div>
-                    </li>
-                </ul>
+                    </div>
+
+                </div>
 
             </div>
+
         </div>
 
-    </div>
-
-</div>
-
-<!--FOOTER-->
 
 
-<!-- Latest compiled and minified JavaScript -->
-<script src="js/jquery-3.1.0.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/fileinput.min.js"></script>
-<script >
+        <!--FOOTER-->
+        <footer class="footer" th:include="index :: newfooter"></footer>
 
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="js/jquery-3.1.0.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/fileinput.min.js"></script>
 
-
-    function editPos(topicId) {
-
-        $.ajax({
-            url: "/positioningcontent",
-            type: "GET",
-            data: {id: topicId},
-            success: function (response) {
-                if (response.comment !== undefined)
-                    $("#motivos").html(response.comment);
-                if (response.posicao !== undefined)
-                    $('#posicao' ).val(response.posicao);
-                if (response.topicId !== undefined)
-                    $('#idTopic' ).val(response.topicId);
-            }
-        });
-
-
-
-        $('#modal-pos').modal('show')
-    }
-</script>
-
-</body>
+    </body>
 
 </html>

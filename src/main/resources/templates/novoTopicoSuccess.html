@@ -15,39 +15,41 @@
     <!--Font-awesome-->
     <link th:href="@{css/font-awesome.css}" rel="stylesheet"/>
 
+    <link th:href="@{css/extra.css}" rel="stylesheet"/>
+
     <link rel="icon" type="image/png" sizes="32x32" th:href="@{img/logofavicon.png}"/>
 
 </head>
 
 
-<body>
+    <body>
 
-    <header th:include="home :: homeheader"></header>
+        <div class="container" >
 
-    <div class="container" style="width:70%; padding-top:100px">
+            <div th:include="home :: homeheader"></div>
 
+                <div class="col-md-8 col-md-push-2" style="width:70%; padding-top:100px">
 
-            <div class="col-md-8 col-md-push-2">
+                    <div class="alert alert-success" role="alert" >Tópico cadastrado com sucesso!</div>
+                    <a th:href="@{topic(id=${id})}"><button id="btnEnviar" type="submit" class="btn btn-primary">Ir para o Tópico</button></a>
 
-                <div class="alert alert-success" role="alert" >Tópico cadastrado com sucesso!</div>
-                <a th:href="@{topic(id=${id})}"><button id="btnEnviar" type="submit" class="btn btn-primary">Ir para o Tópico</button></a>
+                </div>
 
-
-            </div>
-
-    </div>
+        </div>
 
 
 
-<!--FOOTER-->
+        <!--FOOTER-->
+
+        <footer class="footer" th:include="index :: newfooter"></footer>
 
 
-<!-- Latest compiled and minified JavaScript -->
-<script src="js/jquery-3.1.0.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/fileinput.min.js"></script>
-<!--<script src="dist/js/funcoesBusca.js"></script>-->
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="js/jquery-3.1.0.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/fileinput.min.js"></script>
+        <!--<script src="dist/js/funcoesBusca.js"></script>-->
 
-</body>
+    </body>
 
 </html>
