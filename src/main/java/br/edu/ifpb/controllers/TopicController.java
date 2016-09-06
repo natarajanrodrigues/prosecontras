@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -125,7 +126,10 @@ public class TopicController {
 
         mav.addObject("parametro", parametroBusca);
 
-        mav.addObject("topics", topicoService.findByNameLikeIgnoreCase(parametroBusca));
+        List<Topic> topics = topicoService.findByNameLikeIgnoreCase(parametroBusca);
+        Collections.sort(topics, Topic.Comparators.NAME);
+
+        mav.addObject("topics", topics);
 
         return mav;
 

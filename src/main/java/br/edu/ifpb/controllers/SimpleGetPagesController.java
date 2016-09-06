@@ -5,6 +5,7 @@
  */
 package br.edu.ifpb.controllers;
 
+import br.edu.ifpb.entity.Topic;
 import br.edu.ifpb.repository.TopicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.util.Collections;
+import java.util.List;
 
 /**
  *
@@ -46,7 +49,10 @@ public class SimpleGetPagesController {
 
         ModelAndView mav = new ModelAndView("home");
 
-        mav.addObject("topics", topicRepository.findAll());
+        List<Topic> topics = topicRepository.findAll();
+        Collections.sort(topics, Topic.Comparators.DATA);
+        
+        mav.addObject("topics", topics);
 
         return mav;
 
