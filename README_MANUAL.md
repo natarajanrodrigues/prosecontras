@@ -40,6 +40,7 @@ db.createCollection("opinion");
 - Instale uma versão estável do PostgreSQL [aqui](https://www.postgresql.org/download/).
 - Através do pgadmin ou por linha de comando, crie uma base de dados com o nome `prosecontras`.
 
+### Rodando a aplicação
 
 - Compilar o projeto e fazer run da classe br.edu.ifpb.ProsecontrasApplication
 
