@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,7 +40,9 @@ public class TrendsController {
 
         ModelAndView mav = new ModelAndView("trends");
 
-        mav.addObject("topics", topicoService.findByNameLikeIgnoreCase(""));
+        List<Topic> topicList = topicoService.listTipicsSortedByName();
+
+        mav.addObject("topics", topicList);
 
         return mav;
     }
