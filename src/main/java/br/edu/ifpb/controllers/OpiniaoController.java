@@ -158,7 +158,10 @@ public class OpiniaoController {
             opinionService.publishOpinion(opiniao);
             Opinion newOpinion = new Opinion();
             newOpinion.setUser(((UserProfile) httpSession.getAttribute("user")));
-            opinionService.removeCachedOpinion(newOpinion);
+            opinionService.removeCachedOpinion(opiniao);
+            opinionService.saveOpinionOnCache(newOpinion);
+            httpSession.setAttribute("opinion", newOpinion);
+
             return "redirect:/timeline";
 
         } else {
