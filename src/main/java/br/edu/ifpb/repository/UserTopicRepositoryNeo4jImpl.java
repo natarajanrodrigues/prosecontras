@@ -17,7 +17,7 @@ import java.util.*;
 @Repository
 public class UserTopicRepositoryNeo4jImpl implements UserTopicRepository {
 
-    //private String path = "C:/Users/kieckegard/Documents/Neo4j/default.graphdb";
+//    private String path = "C:/Users/kieckegard/Documents/Neo4j/default.graphdb";
     private String path = "/Users/susanneferraz/Dropbox/ADS 2016.1/neo4j";
 
     private File file;
@@ -64,22 +64,20 @@ public class UserTopicRepositoryNeo4jImpl implements UserTopicRepository {
         Map<String, Integer> result = new HashMap<>();
 
         try (Transaction tx = service.beginTx()) {
+
             Node startTopicNode = getTopicNodeById(startTopic.getId());
 
             List<Node> startUsersNodes = getUserNodesByTopic(startTopicNode, startStatus);
 
-//            Integer usersNodeQtde = startUsersNodes.size();
             Integer usersNodeQtde = 0;
-            System.out.println("Users in relationship with topic " + startTopic.getId() + " : " + usersNodeQtde);
-            Integer usersNodeQtdeTarget = 0;
 
+            Integer usersNodeQtdeTarget = 0;
 
             for (Node startUserNode : startUsersNodes) {
 
                 for (Relationship targetRelationship : startUserNode.getRelationships(Direction.OUTGOING)) {
-                    Long targetTopicId = (Long) targetRelationship.getEndNode().getProperty("id");
 
-                    System.out.println("Found " + targetStatus + " relationship with topic " + targetTopicId);
+                    Long targetTopicId = (Long) targetRelationship.getEndNode().getProperty("id");
 
                     if (targetTopic.getId().equals(targetTopicId)) {
                         usersNodeQtde++;
@@ -91,8 +89,6 @@ public class UserTopicRepositoryNeo4jImpl implements UserTopicRepository {
                 }
             }
 
-            System.out.println("UsersNodeQtdeTarget: " + usersNodeQtdeTarget);
-
             tx.success();
 
             result.put("total", usersNodeQtde);
@@ -103,6 +99,7 @@ public class UserTopicRepositoryNeo4jImpl implements UserTopicRepository {
     }
 
     private List<Node> getUserNodesByTopic(Node topic, Status status) {
+
         List<Node> users = new LinkedList<>();
 
         if (topic != null && status != null) {
@@ -112,9 +109,8 @@ public class UserTopicRepositoryNeo4jImpl implements UserTopicRepository {
                 System.out.println("id: " + userNode.getProperty("id"));
                 users.add(userNode);
             }
+
         }
-
-
 
         return users;
     }
@@ -169,11 +165,14 @@ public class UserTopicRepositoryNeo4jImpl implements UserTopicRepository {
             Set<Long> forTopicsId = getForTopicsByUser(userNode);
             Set<Long> againstTopicsId = getAgainstTopicsByUser(userNode);
 
-            Set<Long> suggestedTopics = getSuggestedTopicsByForTopics(forTopicsId, againstTopicsId, user.getId());
+            Set<Long> suggestedForTopics = getSuggestedTopicsByTopics(forTopicsId, againstTopicsId, user.getId(), Status.FOR);
+            Set<Long> suggestedAgainstTopics = getSuggestedTopicsByTopics(forTopicsId, againstTopicsId, user.getId(), Status.AGAINST);
 
             tx.success();
 
-            return suggestedTopics;
+            suggestedForTopics.addAll(suggestedAgainstTopics);
+
+            return suggestedForTopics;
         }
     }
 
@@ -209,36 +208,49 @@ public class UserTopicRepositoryNeo4jImpl implements UserTopicRepository {
         return topicsId;
     }
 
-    private Set<Long> getSuggestedTopicsByForTopics(Set<Long> forTopics, Set<Long> againstTopics, Long userId) {
+    private Set<Long> getSuggestedTopicsByTopics(Set<Long> forTopics, Set<Long> againstTopics, Long userId, Status status) {
 
         Set<Long> suggestTopics = new TreeSet<>();
 
-        for (Long topicId : forTopics) {
-            Node forTopic = getTopicNodeById(topicId);
+        if(status == Status.FOR) {
+            System.out.println("Verificando tópicos a favor");
+            for (Long topicId : forTopics)
+                suggestTopics.addAll(getRelatedTopicsByTopic(forTopics, againstTopics, userId, status, topicId));
+        } else if (status == Status.AGAINST) {
+            System.out.println("Verificando tópicos contra");
+            for (Long topicId : againstTopics)
+                suggestTopics.addAll(getRelatedTopicsByTopic(forTopics, againstTopics, userId, status, topicId));
+        }
 
-            for (Relationship relationship : forTopic.getRelationships(Direction.INCOMING, Status.FOR)) {
+        return suggestTopics;
+    }
 
-                Node likedUser = relationship.getStartNode();
+    private Set<Long> getRelatedTopicsByTopic(Set<Long> forTopics, Set<Long> againstTopics, Long userId, Status status, Long topicId) {
+        Set<Long> relatedTopics = new TreeSet<>();
 
-                Long likedUserId = (Long) likedUser.getProperty("id");
+        Node forTopic = getTopicNodeById(topicId);
 
-                if(!likedUserId.equals(userId)) {
+        for (Relationship relationship : forTopic.getRelationships(Direction.INCOMING, status)) {
 
-                    for (Relationship likedUserForTopicRelation : likedUser.getRelationships(Direction.OUTGOING, Status.FOR)) {
+            Node likedUser = relationship.getStartNode();
 
-                        Node suggestTopic = likedUserForTopicRelation.getEndNode();
-                        Long suggestTopicId = (Long) suggestTopic.getProperty("id");
+            Long likedUserId = (Long) likedUser.getProperty("id");
 
-                        if (!forTopics.contains(suggestTopicId) && !againstTopics.contains(suggestTopicId))
-                            suggestTopics.add(suggestTopicId);
-                    }
+            if(!likedUserId.equals(userId)) {
+
+                for (Relationship likedUserForTopicRelation : likedUser.getRelationships(Direction.OUTGOING, Status.FOR)) {
+
+                    Node suggestTopic = likedUserForTopicRelation.getEndNode();
+                    Long suggestTopicId = (Long) suggestTopic.getProperty("id");
+
+                    if (!forTopics.contains(suggestTopicId) && !againstTopics.contains(suggestTopicId))
+                        relatedTopics.add(suggestTopicId);
                 }
-
             }
 
         }
 
-        return suggestTopics;
+        return relatedTopics;
     }
 
     @Override
@@ -293,7 +305,7 @@ public class UserTopicRepositoryNeo4jImpl implements UserTopicRepository {
     @Override
     public Integer getWhoVotedQtd() {
         ResourceIterator<Node> users = service.findNodes(Label.label("user"));
-        Integer count = 0;
+        Integer count = new Integer(0);
         while (users.hasNext()) {
             count++;
             users.next();
@@ -303,7 +315,7 @@ public class UserTopicRepositoryNeo4jImpl implements UserTopicRepository {
     }
 
     private Integer countRelationship(Iterator<Relationship> iterator) {
-        Integer forCount = 0;
+        Integer forCount = new Integer(0);
 
         while (iterator.hasNext()) {
             forCount++;
